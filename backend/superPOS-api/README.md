@@ -2,7 +2,7 @@
 
 1. **Install Java**  
    Make sure Java is installed on your device. If not, you can download and install it from the following link:
-   [Download Java](https://adoptium.net/installation/) (kalau saya pakai versi 21)
+   [Download Java](https://adoptium.net/installation/) (I’m using version 21).
 
 
 2. **Configure the Database**  
@@ -17,3 +17,4 @@
 
 4. **API is Ready**  
    The API is now ready to use. You can test it using the following URL:
+   http://localhost:8080/api 🚀
