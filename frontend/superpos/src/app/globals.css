@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #eeeeee;
+  --foreground: #171717;
+  --primary: #1E2A47;
+  --secondary: #3DD8A1;
+  --highlight: #FFD700;
+  --main-text: #333333;
+  --secondary-text: #A6A6A6;
+  --error: #F44336;
+  --interactive: #00B0FF
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
