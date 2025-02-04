@@ -19,17 +19,15 @@ import RightLayout from "@/components/Right";
 import Error from "@/components/Error";
 import { addItem } from "@/libs/features/cart/cartSlice";
 import Cart from "./_components/Cart";
-import PaymentModal from "./_components/PaymentModal";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function Order() {
+export default function OrderPage() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
     const queryParams = new URLSearchParams(searchParams.toString());
 
-    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>();
     const [selectedCategory, setSelectedCategory] = useState<string>(queryParams.get("category") || "");
     const [selectedSort, setSelectedSort] = useState(
@@ -93,11 +91,8 @@ export default function Order() {
 
     const handleLoadMoreData = () => setSize(size + 1);
 
-    const handleOpenCloseModal = () => setIsOpen(!isOpen);
-
     return (
         <main className="h-screen w-full flex justify-between">
-            <PaymentModal isOpen={isOpen} closeModal={handleOpenCloseModal} />
             <div className="mx-6 h-full w-2/3 overflow-auto" id="scrollable">
                 <div className="my-4 flex justify-between items-center">
                     <h1 className="text-2xl font-bold">Order</h1>
@@ -126,7 +121,7 @@ export default function Order() {
                 )}
             </div>
             <RightLayout>
-                <Cart openModal={handleOpenCloseModal} />
+                <Cart />
             </RightLayout>
         </main>
     );

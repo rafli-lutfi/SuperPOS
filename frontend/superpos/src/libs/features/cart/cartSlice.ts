@@ -60,9 +60,13 @@ const cartSlice = createSlice({
 
             state.dataCart = state.dataCart.filter((item) => item.product.id !== id);
         },
+        resetCart: (state) => {
+            state.dataCart = [];
+            state.total = 0;
+        },
     },
 });
 
-export const { addItem, increaseQuantity, decreaseQuantity, deleteItem } = cartSlice.actions;
+export const { addItem, increaseQuantity, decreaseQuantity, deleteItem, resetCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

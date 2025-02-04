@@ -3,8 +3,28 @@ import { increaseQuantity, decreaseQuantity, deleteItem } from "@/libs/features/
 import Image from "next/image";
 import { Product } from "@/types/Product";
 import { capitalizeEachWord, toIDRCurrency } from "@/utils/formatter";
+import Link from "next/link";
+import { motion, Variants } from "motion/react";
+import { useEffect, useRef } from "react";
 
-export default function Cart({ openModal }: { openModal: () => void }) {
+const cartVariants: Variants = {
+    hidden: {
+        opacity: 0,
+        x: 100,
+    },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: {
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            mass: 1, // Memengaruhi percepatan animasi
+        },
+    },
+};
+
+export default function Cart() {
     const { dataCart, total } = useAppSelector((state) => state.cartSlice);
     const dispatch = useAppDispatch();
 
@@ -20,15 +40,32 @@ export default function Cart({ openModal }: { openModal: () => void }) {
         dispatch(deleteItem(product));
     };
 
+    const cartContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (cartContainerRef.current) {
+            cartContainerRef.current.scrollTo({
+                top: cartContainerRef.current.scrollHeight,
+                behavior: "smooth", // Animasi scroll
+            });
+        }
+    }, [dataCart.length]);
+
     return (
         <>
             <h2 className="p-4 text-lg font-bold">Current Order</h2>
             <div className="h-full flex-1 flex flex-col justify-between">
-                <div className="mx-2 h-full max-h-[75vh] flex flex-col gap-2 overflow-y-auto">
+                <div
+                    ref={cartContainerRef}
+                    className="mx-2 pb-8 h-full max-h-[75vh] flex flex-col gap-2 overflow-y-auto"
+                >
                     {dataCart.map((item, index) => (
-                        <div
+                        <motion.div
                             key={item.product.id}
                             className="px-4 py-2 flex gap-4 bg-background items-center rounded-lg border border-slate-200 shadow-lg"
+                            initial="hidden"
+                            animate="visible"
+                            variants={cartVariants}
                         >
                             <span className="text-sm">{index + 1}</span>
                             <Image
@@ -91,7 +128,7 @@ export default function Cart({ openModal }: { openModal: () => void }) {
                                     <span>{toIDRCurrency(item.subTotal)}</span>
                                 </p>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
                 <div className="h-fit mx-2 mb-2 flex-shrink-0 flex flex-col justify-between gap-2">
@@ -99,13 +136,14 @@ export default function Cart({ openModal }: { openModal: () => void }) {
                         <span>Total:</span>
                         <span>{toIDRCurrency(total)}</span>
                     </p>
-                    <button
-                        className="px-4 py-2 w-full rounded-lg font-bold bg-interactive hover:text-white disabled:bg-slate-300 disabled:hover:text-black"
-                        onClick={openModal}
-                        disabled={dataCart.length < 1}
-                    >
-                        Proceed to Payment
-                    </button>
+                    <Link href="/order/payment">
+                        <button
+                            className="px-4 py-2 w-full rounded-lg font-bold bg-interactive hover:text-white hover:bg-primary disabled:bg-slate-300 disabled:hover:text-black"
+                            disabled={dataCart.length < 1}
+                        >
+                            Proceed to Payment
+                        </button>
+                    </Link>
                 </div>
             </div>
         </>
