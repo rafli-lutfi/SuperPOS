@@ -92,7 +92,7 @@ export default function OrderPage() {
     const handleLoadMoreData = () => setSize(size + 1);
 
     return (
-        <main className="h-screen w-full flex justify-between">
+        <>
             <div className="mx-6 h-full w-2/3 overflow-auto" id="scrollable">
                 <div className="my-4 flex justify-between items-center">
                     <h1 className="text-2xl font-bold">Order</h1>
@@ -123,7 +123,7 @@ export default function OrderPage() {
             <RightLayout>
                 <Cart />
             </RightLayout>
-        </main>
+        </>
     );
 }
 
