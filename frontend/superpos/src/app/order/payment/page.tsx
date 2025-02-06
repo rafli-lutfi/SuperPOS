@@ -2,12 +2,18 @@
 
 import RightLayout from "@/components/Right";
 import React, { useEffect, useState } from "react";
-import { useAppSelector } from "@/libs/hooks";
+import { useAppDispatch, useAppSelector } from "@/libs/hooks";
 import Image from "next/image";
 import { capitalizeEachWord, toIDRCurrency } from "@/utils/formatter";
 import { motion, Variants } from "motion/react";
 import { useRouter } from "next/navigation";
-import PaymentModal from "./_components/CashModal";
+import Swal from "sweetalert2";
+import { Response } from "@/types/Response";
+import { Transaction } from "@/types/Transaction";
+import { poster, updater } from "@/libs/fetcher";
+import { resetCart } from "@/libs/features/cart/cartSlice";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const itemListVariants: Variants = {
     hidden: {
@@ -40,10 +46,12 @@ const itemVariants: Variants = {
 
 export default function PaymentPage() {
     const router = useRouter();
+    const dispatch = useAppDispatch();
     const { dataCart, total } = useAppSelector((state) => state.cartSlice);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cash");
+    const [paidAmount, setPaidAmount] = useState<number>(0);
+    const [change, setChange] = useState<number>(0);
 
     useEffect(() => {
         if (dataCart.length === 0) {
@@ -55,19 +63,59 @@ export default function PaymentPage() {
         setSelectedPaymentMethod(e.target.value);
     };
 
-    const handleOnSubmitButton = (e: React.FormEvent) => {
+    const handleOnSubmitButton = async (e: React.FormEvent) => {
         e.preventDefault();
         if (selectedPaymentMethod === "cash") {
-            setIsModalOpen(!isModalOpen); // open
+            if (paidAmount < total) {
+                return Swal.fire({
+                    title: "Insufficient Amount",
+                    icon: "warning",
+                });
+            }
+
+            const payload = {
+                details: dataCart.map((item) => {
+                    return { product_id: item.product.id, quantity: item.quantity };
+                }),
+            };
+
+            try {
+                const transaction: Response<Transaction> = await poster(`${API_URL}/transactions`, payload);
+
+                const transactionId = transaction.data.id;
+
+                const payment: Response<{ change: number }> = await updater(
+                    `${API_URL}/transactions/${transactionId}/pay`,
+                    { total_pay: paidAmount }
+                );
+
+                Swal.fire({
+                    title: "transaction success",
+                    text: "Change: " + toIDRCurrency(payment.data.change),
+                    icon: "success",
+                    confirmButtonText: "Confirm",
+                    confirmButtonColor: "#00B0FF",
+                });
+
+                dispatch(resetCart());
+                router.push("/order");
+            } catch (error) {
+                console.error("Error submitting form:", error);
+            }
         }
     };
 
-    const handleOpenCloseModal = () => setIsModalOpen(!isModalOpen);
+    const handlePaidAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPaidAmount(Number(e.target.value));
+        if (Number(e.target.value) >= total) {
+            setChange(Number(e.target.value) - total);
+        } else {
+            setChange(0);
+        }
+    };
 
     return (
         <main className="h-screen w-full flex justify-between">
-            <PaymentModal isOpen={isModalOpen} closeModal={handleOpenCloseModal} />
-
             <div className="mx-6 h-full w-2/3 overflow-auto" id="scrollable">
                 <div className="my-4 flex justify-between items-center">
                     <h1 className="text-2xl font-bold">Order Details</h1>
@@ -112,6 +160,23 @@ export default function PaymentPage() {
                 <form className="px-4" onSubmit={handleOnSubmitButton}>
                     <p className="flex justify-between">
                         Total: <span className="text-md font-bold ">{toIDRCurrency(total)}</span>
+                    </p>
+
+                    {/* paid amount */}
+                    <div className="mt-2 flex justify-between items-center text-left gap-2">
+                        <label htmlFor="paid">Paid Amount:</label>
+                        <input
+                            type="number"
+                            name="paid"
+                            id="paid"
+                            placeholder="Rp. 0"
+                            className="border indent-2 h-12 rounded-lg"
+                            required
+                            onChange={handlePaidAmountInput}
+                        />
+                    </div>
+                    <p className="mt-2 flex justify-between">
+                        Change: <span className="text-md font-bold ">{toIDRCurrency(change)}</span>
                     </p>
 
                     {/* payment method */}
@@ -200,7 +265,8 @@ export default function PaymentPage() {
                         </div>
                         <button
                             type="submit"
-                            className="mt-6 py-2 px-4 w-full bg-interactive rounded-lg font-bold hover:bg-primary hover:text-white"
+                            className="mt-6 py-2 px-4 w-full bg-interactive rounded-lg font-bold hover:bg-[#008CDB] hover:text-white disabled:bg-gray-400 disabled:text-black"
+                            disabled={paidAmount <= total}
                         >
                             Confirm Payment
                         </button>
