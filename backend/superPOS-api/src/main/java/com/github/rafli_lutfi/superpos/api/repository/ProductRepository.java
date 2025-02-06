@@ -32,4 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("search") String search,
             @Param("category") String category,
             Pageable pageable);
+
+    @Query("SELECT p FROM Product p WHERE LOWER(p.name) = LOWER(:name)")
+    Optional<Product> findByNameIgnoreCase(@Param("name") String name);
 }

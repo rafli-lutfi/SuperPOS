@@ -46,9 +46,7 @@ public class ProductService {
 
     @Transactional
     public Product save(Product product, Long categoryId) {
-        product.setName(product.getName().toLowerCase());
-
-        boolean isProductNameExist = productRepository.findByName(product.getName()).isPresent();
+        boolean isProductNameExist = productRepository.findByNameIgnoreCase(product.getName()).isPresent();
         if (isProductNameExist) {
             throw new RecordAlreadyExistException("product with name " + product.getName() + " already exist");
         }
