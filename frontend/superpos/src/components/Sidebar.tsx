@@ -67,7 +67,7 @@ export default function Sidebar() {
                 </motion.li>
                 <motion.li variants={liVariants} whileHover={{ scale: 0.9 }}>
                     <Link
-                        href="#"
+                        href="/history"
                         className={`block mx-2 px-1 py-2 rounded-lg group hover:bg-interactive ${
                             pathname === "/history" ? "bg-interactive" : ""
                         }`}

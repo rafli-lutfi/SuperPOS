@@ -5,13 +5,13 @@ import { Pagination } from "@/types/Pagination";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { AppDispatch, RootState, AppStore } from "./store";
 
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 15;
 
-export const usePagination = <T, K extends string>(url: string, params: string) => {
+export const usePagination = <T, K extends string>(url: string, params: string | null) => {
     const getKey = (pageIndex: number, previousPageData: Response<Pagination<T, K>>) => {
         if (previousPageData && previousPageData.data.is_last) return null;
 
-        const otherParams = params.length ? `&${params}` : "";
+        const otherParams = params?.length ? `&${params}` : "";
 
         return `${url}?page=${pageIndex + 1}&size=${PAGE_SIZE}${otherParams}`;
     };
