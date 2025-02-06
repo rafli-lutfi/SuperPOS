@@ -19,8 +19,8 @@ export default function HistoryTransactionPage() {
 
     const queryParams = new URLSearchParams(searchParams.toString());
 
-    const [sortColumn, setSortColumn] = useState<string | null>("transaction_date");
-    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+    const [sortColumn, setSortColumn] = useState<string | null>(queryParams.get("sort"));
+    const [sortOrder, setSortOrder] = useState<string>(queryParams.get("order") || "desc");
 
     const {
         data: transactionResponse,
@@ -33,7 +33,7 @@ export default function HistoryTransactionPage() {
 
     useEffect(() => {
         if (searchParams.size === 0) {
-            setSortColumn("transaction_date");
+            setSortColumn("createdAt");
             setSortOrder("desc");
         }
     }, [searchParams]);
