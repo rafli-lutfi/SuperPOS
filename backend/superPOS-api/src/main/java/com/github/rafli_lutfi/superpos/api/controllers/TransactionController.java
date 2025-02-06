@@ -27,8 +27,8 @@ public class TransactionController {
     public ResponseEntity<ApiResponse<?>> getAllTransactions(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
-            @RequestParam(value = "sort", defaultValue = "id") String sort,
-            @RequestParam(value = "order", defaultValue = "asc") String order
+            @RequestParam(value = "sort", defaultValue = "createdAt") String sort,
+            @RequestParam(value = "order", defaultValue = "desc") String order
     ) {
         Page<Transaction> transactions = transactionService.findAll(page, size, sort, order);
         ListTransactionResponseDTO responseDTO = TransactionResponseMapper.toListTransactionResponseDTO(transactions);
@@ -38,7 +38,7 @@ public class TransactionController {
     }
 
     @GetMapping("{transactionId}")
-    public ResponseEntity<ApiResponse<?>> getTransactionById(@PathVariable(name = "transactionId") Long transactionId) {
+    public ResponseEntity<ApiResponse<?>> getTransactionById(@PathVariable(name = "transactionId") String transactionId) {
         Transaction transaction = transactionService.findById(transactionId);
         TransactionResponseDTO responseDTO = TransactionResponseMapper.toTransactionResponseDTO(transaction);
 
@@ -57,7 +57,7 @@ public class TransactionController {
 
     @PutMapping("{transactionId}/pay")
     public ResponseEntity<ApiResponse<?>> payTransaction(
-            @PathVariable(name = "transactionId") Long transactionId,
+            @PathVariable(name = "transactionId") String transactionId,
             @RequestBody @Validated PayTransactionRequestDTO requestDTO
     ){
         Double change = transactionService.update(transactionId, requestDTO.getTotalPay());

@@ -27,6 +27,7 @@ public class TransactionDetailService {
         transactionDetail.setProductName(product.getName());
         transactionDetail.setProductPrice(product.getPrice());
         transactionDetail.setSubTotal(transactionDetail.getQuantity() * product.getPrice());
+        transactionDetail.setImageUrl(product.getImageUrl());
 
         product.setStock(product.getStock() - transactionDetail.getQuantity());
         productService.update(product, null);

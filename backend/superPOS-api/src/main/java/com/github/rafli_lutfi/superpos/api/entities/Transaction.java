@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Date;
 import java.util.List;
@@ -17,16 +18,10 @@ import java.util.List;
 @Setter
 public class Transaction {
     @Id
-    @SequenceGenerator(
-            name = "transaction_seq",
-            sequenceName = "transaction_seq",
-            allocationSize = 1
-    )
     @GeneratedValue(
-            generator = "transaction_seq",
-            strategy = GenerationType.SEQUENCE
+            strategy = GenerationType.UUID
     )
-    private Long id;
+    private String id;
 
     @Column(name = "total_amount")
     private Double totalAmount;

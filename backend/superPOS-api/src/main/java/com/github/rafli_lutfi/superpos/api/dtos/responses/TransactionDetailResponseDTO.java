@@ -21,4 +21,7 @@ public class TransactionDetailResponseDTO {
 
     @JsonProperty("sub_total")
     private Double subTotal;
+
+    @JsonProperty("image_url")
+    private String imageUrl;
 }

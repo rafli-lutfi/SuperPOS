@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 public class TransactionResponseDTO {
     @JsonProperty("id")
-    private Long id;
+    private String id;
 
     @JsonProperty("total_amount")
     private Double totalAmount;

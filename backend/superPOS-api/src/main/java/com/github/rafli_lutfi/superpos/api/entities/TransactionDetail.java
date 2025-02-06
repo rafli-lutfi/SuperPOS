@@ -45,6 +45,9 @@ public class TransactionDetail {
     @Column(name = "sub_total")
     private Double subTotal;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private Date createdAt;

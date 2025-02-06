@@ -37,7 +37,7 @@ public class TransactionService {
         return transactionRepository.findAll(pageable);
     }
 
-    public Transaction findById(Long id) {
+    public Transaction findById(String id) {
         return transactionRepository.findById(id).orElseThrow(
                 () -> new RecordNotFoundException("transaction with id " + id + " not found")
         );
@@ -63,7 +63,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public Double update(Long TransactionId, Double totalPay){
+    public Double update(String TransactionId, Double totalPay){
         Transaction transactionToUpdate = transactionRepository.findById(TransactionId).orElseThrow(
                 () -> new RecordNotFoundException("transaction with id " + TransactionId + " not found")
         );

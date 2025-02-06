@@ -13,7 +13,7 @@ public class TransactionRequestMapper {
         return transaction;
     }
 
-    public static Transaction fromUpdateTransactionRequestDTO(PayTransactionRequestDTO requestDTO, Long transactionId) {
+    public static Transaction fromUpdateTransactionRequestDTO(PayTransactionRequestDTO requestDTO, String transactionId) {
         Transaction transaction = new Transaction();
         transaction.setId(transactionId);
         transaction.setTotalPay(requestDTO.getTotalPay());

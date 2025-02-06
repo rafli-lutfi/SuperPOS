@@ -11,6 +11,7 @@ public class TransactionDetailResponseMapper {
         responseDTO.setProductPrice(transactionDetail.getProductPrice());
         responseDTO.setQuantity(transactionDetail.getQuantity());
         responseDTO.setSubTotal(transactionDetail.getSubTotal());
+        responseDTO.setImageUrl(transactionDetail.getImageUrl());
         return responseDTO;
     }
 }
