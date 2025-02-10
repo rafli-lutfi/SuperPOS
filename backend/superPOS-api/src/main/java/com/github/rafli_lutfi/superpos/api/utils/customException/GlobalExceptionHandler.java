@@ -50,7 +50,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             RecordAlreadyExistException.class,
             CategoryAndSubCategoryMismatchException.class,
-            TransactionAlreadyPaidException.class
+            CategoryNotEmptyException.class,
+            TransactionAlreadyPaidException.class,
     })
     public ResponseEntity<ApiResponse<?>> handlerExceptionForConflict(Exception e) {
         ApiResponse<Object> response = new ApiResponse<>(HttpStatus.CONFLICT.value(), e.getMessage(), null);

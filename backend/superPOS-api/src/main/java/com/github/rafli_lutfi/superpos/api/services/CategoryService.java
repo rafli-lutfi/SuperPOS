@@ -3,6 +3,7 @@ package com.github.rafli_lutfi.superpos.api.services;
 import com.github.rafli_lutfi.superpos.api.entities.Category;
 import com.github.rafli_lutfi.superpos.api.repository.CategoryRepository;
 import com.github.rafli_lutfi.superpos.api.repository.ProductRepository;
+import com.github.rafli_lutfi.superpos.api.utils.customException.CategoryNotEmptyException;
 import com.github.rafli_lutfi.superpos.api.utils.customException.RecordAlreadyExistException;
 import com.github.rafli_lutfi.superpos.api.utils.customException.RecordNotFoundException;
 import jakarta.transaction.Transactional;
@@ -62,7 +63,9 @@ public class CategoryService {
             throw new RecordNotFoundException("category with id " + categoryId + " not found");
         }
 
-        productRepository.detachCategoryFromProduct(categoryId);
+        if(categoryRepository.countTotalRelatedProductById(categoryId) > 0){
+            throw new CategoryNotEmptyException("Cannot delete category with id " + categoryId + " because it has related products");
+        }
 
         categoryRepository.deleteById(categoryId);
     }

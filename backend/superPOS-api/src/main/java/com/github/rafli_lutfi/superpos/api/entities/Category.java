@@ -29,9 +29,7 @@ public class Category {
     private Long id;
 
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "category",
-            cascade = CascadeType.ALL,
-            orphanRemoval = false
+            mappedBy = "category"
     )
     private List<Product> products;
 
