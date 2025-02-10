@@ -16,4 +16,7 @@ public class CategoryResponseDTO {
 
     @JsonProperty("description")
     private String description;
+
+    @JsonProperty("total_related_product")
+    private Integer totalRelatedProduct;
 }

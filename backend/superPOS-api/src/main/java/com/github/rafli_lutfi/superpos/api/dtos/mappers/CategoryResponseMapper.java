@@ -11,6 +11,7 @@ public class CategoryResponseMapper {
         responseDTO.setId(category.getId());
         responseDTO.setName(category.getName());
         responseDTO.setDescription(category.getDescription());
+        responseDTO.setTotalRelatedProduct(category.getTotalRelatedProduct());
 
         return responseDTO;
     }

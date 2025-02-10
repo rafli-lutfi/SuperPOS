@@ -22,9 +22,12 @@ public class CategoryService {
     }
 
     public Category findById(Long id){
-        return categoryRepository.findById(id).orElseThrow(
+        Category category = categoryRepository.findById(id).orElseThrow(
                 () -> new RecordNotFoundException("category with id " + id + " not found")
         );
+
+        category.setTotalRelatedProduct(categoryRepository.countTotalRelatedProductById(id));
+        return category;
     }
 
     public Category save(Category category) {

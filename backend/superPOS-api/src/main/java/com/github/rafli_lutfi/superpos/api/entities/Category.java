@@ -41,6 +41,9 @@ public class Category {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Transient
+    private Integer totalRelatedProduct;
+
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private Date createdAt;
