@@ -77,8 +77,8 @@ public class ProductService {
         }
 
         // update product name
-        if(product.getName() != null && !product.getName().isBlank() && !product.getName().toLowerCase().equals(productToUpdate.getName())) {
-            productToUpdate.setName(product.getName().toLowerCase());
+        if(product.getName() != null && !product.getName().isBlank() && !product.getName().equalsIgnoreCase(productToUpdate.getName())) {
+            productToUpdate.setName(product.getName());
         }
 
         // update product description
