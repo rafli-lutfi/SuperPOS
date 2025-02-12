@@ -28,13 +28,12 @@ public class TransactionDetail {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_transaction_detail_transaction"))
     private Transaction transaction;
 
-    @Transient
-    private Long productId;
-
-    @Column(name = "product_name")
-    private String productName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_transaction_detail_product"))
+    private Product product;
 
     @Column(name = "product_price")
     private Double productPrice;

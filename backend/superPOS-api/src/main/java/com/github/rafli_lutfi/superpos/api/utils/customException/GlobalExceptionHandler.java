@@ -52,6 +52,7 @@ public class GlobalExceptionHandler {
             CategoryAndSubCategoryMismatchException.class,
             CategoryNotEmptyException.class,
             TransactionAlreadyPaidException.class,
+            ProductDeletionNotAllowedException.class
     })
     public ResponseEntity<ApiResponse<?>> handlerExceptionForConflict(Exception e) {
         ApiResponse<Object> response = new ApiResponse<>(HttpStatus.CONFLICT.value(), e.getMessage(), null);

@@ -2,6 +2,8 @@ package com.github.rafli_lutfi.superpos.api.services;
 
 import com.github.rafli_lutfi.superpos.api.entities.*;
 import com.github.rafli_lutfi.superpos.api.repository.ProductRepository;
+import com.github.rafli_lutfi.superpos.api.repository.TransactionDetailRepository;
+import com.github.rafli_lutfi.superpos.api.utils.customException.ProductDeletionNotAllowedException;
 import com.github.rafli_lutfi.superpos.api.utils.customException.RecordAlreadyExistException;
 import com.github.rafli_lutfi.superpos.api.utils.customException.RecordNotFoundException;
 import jakarta.transaction.Transactional;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final TransactionDetailRepository transactionDetailRepository;
 
     public Page<Product> findAll(Integer page, Integer size, String sort, String order, String search, String category) {
         page = (page == null || page < 1) ? 0 : page - 1;
@@ -108,6 +111,11 @@ public class ProductService {
         boolean isProductEmpty = productRepository.findById(id).isEmpty();
         if (isProductEmpty) {
             throw new RecordNotFoundException("product with id " + id + " not found");
+        }
+
+        boolean hasTransactionDetail = transactionDetailRepository.existsByProductId(id);
+        if(hasTransactionDetail) {
+            throw new ProductDeletionNotAllowedException("Cannot delete product with id " + id + " because it is referenced in transaction details");
         }
 
         productRepository.deleteById(id);

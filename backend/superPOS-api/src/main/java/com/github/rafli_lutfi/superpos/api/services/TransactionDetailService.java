@@ -17,14 +17,13 @@ public class TransactionDetailService {
 
     @Transactional
     public TransactionDetail save(Transaction transaction, TransactionDetail transactionDetail) {
-        Product product = productService.findById(transactionDetail.getProductId());
+        Product product = productService.findById(transactionDetail.getProduct().getId());
 
         if (product.getStock() < transactionDetail.getQuantity()) {
             throw new InsufficientStockException("insufficient stock");
         }
 
         transactionDetail.setTransaction(transaction);
-        transactionDetail.setProductName(product.getName());
         transactionDetail.setProductPrice(product.getPrice());
         transactionDetail.setSubTotal(transactionDetail.getQuantity() * product.getPrice());
         transactionDetail.setImageUrl(product.getImageUrl());

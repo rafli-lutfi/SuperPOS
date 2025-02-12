@@ -7,7 +7,7 @@ public class TransactionDetailResponseMapper {
     public static TransactionDetailResponseDTO toTransactionDetailResponseDTO(TransactionDetail transactionDetail) {
         TransactionDetailResponseDTO responseDTO = new TransactionDetailResponseDTO();
         responseDTO.setId(transactionDetail.getId());
-        responseDTO.setProductName(transactionDetail.getProductName());
+        responseDTO.setProductName(transactionDetail.getProduct().getName());
         responseDTO.setProductPrice(transactionDetail.getProductPrice());
         responseDTO.setQuantity(transactionDetail.getQuantity());
         responseDTO.setSubTotal(transactionDetail.getSubTotal());
