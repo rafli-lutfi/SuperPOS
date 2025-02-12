@@ -26,7 +26,7 @@ const cardVariants: Variants = {
 export default function ProductCard({ product, onClickProduct }: ProductCardProps) {
     return (
         <motion.button
-            className="p-2 h-full flex flex-col border bg-white shadow-md rounded-lg"
+            className="flex h-full flex-col rounded-lg border bg-white p-2 shadow-md"
             variants={cardVariants}
             initial="hidden"
             animate="visible"
@@ -39,16 +39,16 @@ export default function ProductCard({ product, onClickProduct }: ProductCardProp
                     alt={product.name}
                     width={100}
                     height={100}
-                    className="w-full h-32 lg:h-60"
+                    className="h-32 w-full lg:h-60"
                     style={{ objectFit: "contain" }}
                 />
             </div>
-            <div className="mt-4 h-full w-full flex flex-col justify-between">
+            <div className="mt-4 flex h-full w-full flex-col justify-between">
                 <p className="cursor-default text-left text-sm font-semibold">{product.name}</p>
-                <div className="mt-3 flex justify-between items-center">
+                <div className="mt-3 flex items-center justify-between">
                     <p className="cursor-default text-sm">{toIDRCurrency(product.price)}</p>
                     <p
-                        className="px-2 py-1 text-xs w-fit text-wrap text-center text-background bg-interactive rounded-lg cursor-pointer"
+                        className="w-fit cursor-pointer text-wrap rounded-lg bg-interactive px-2 py-1 text-center text-xs text-background"
                         title={capitalizeEachWord(product.category.name)}
                     >
                         {truncateName(capitalizeEachWord(product.category.name))}

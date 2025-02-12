@@ -40,7 +40,7 @@ export default function EditProductPage() {
         <Error error={categoryError} />
     ) : (
         <div className="mx-6 w-full overflow-auto">
-            <div className="flex gap-4 items-center my-4">
+            <div className="my-4 flex items-center gap-4">
                 <Link href={"/category"}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@ export default function EditProductPage() {
                 </Link>
                 <h1 className="text-2xl font-bold">Edit Category</h1>
             </div>
-            <div className="bg-white rounded-lg px-4 py-2 shadow-lg border flex items-center gap-2">
+            <div className="flex items-center gap-2 rounded-lg border bg-white px-4 py-2 shadow-lg">
                 <CategoryForm category={categoryResponse?.data} type={type as "new" | "edit"} />
             </div>
         </div>

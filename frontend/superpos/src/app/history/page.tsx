@@ -52,9 +52,9 @@ export default function HistoryTransactionPage() {
     ) : transactionError ? (
         <Error error={transactionError} />
     ) : (
-        <div className="mx-6 w-full h-full flex flex-col">
-            <h1 className="text-2xl font-bold my-4">Transaction History</h1>
-            <div className="h-full rounded-lg shadow-lg overflow-auto" id="table-container">
+        <div className="mx-6 flex h-full w-full flex-col">
+            <h1 className="my-4 text-2xl font-bold">Transaction History</h1>
+            <div className="h-full overflow-auto rounded-lg shadow-lg" id="table-container">
                 <InfiniteScroll
                     next={() => setSize(size + 1)}
                     hasMore={!isReachEnd}
@@ -68,12 +68,12 @@ export default function HistoryTransactionPage() {
                             <tr className="bg-gray-100">
                                 <th className="border-b border-gray-300 px-4 py-2 text-center">No</th>
                                 <th className="border-b border-gray-300 px-4 py-2 text-center">
-                                    <div className="flex justify-center items-center">
+                                    <div className="flex items-center justify-center">
                                         <p>ID</p>
                                     </div>
                                 </th>
                                 <th className="border-b border-gray-300 px-4 py-2 text-center">
-                                    <div className="flex gap-2 justify-center items-center">
+                                    <div className="flex items-center justify-center gap-2">
                                         <p>Transaction Date</p>
                                         <button onClick={() => handleSortButton("createdAt")}>
                                             <svg
@@ -82,7 +82,7 @@ export default function HistoryTransactionPage() {
                                                 fill="currentColor"
                                                 className={`w-5 ${
                                                     sortColumn === "createdAt"
-                                                        ? "text-black border border-black"
+                                                        ? "border border-black text-black"
                                                         : "text-gray-500"
                                                 }`}
                                             >
@@ -96,7 +96,7 @@ export default function HistoryTransactionPage() {
                                     </div>
                                 </th>
                                 <th className="border-b border-gray-300 px-4 py-2 text-right">
-                                    <div className="flex gap-2 justify-end items-center">
+                                    <div className="flex items-center justify-end gap-2">
                                         <p>Total Price</p>
                                         <button onClick={() => handleSortButton("totalAmount")}>
                                             <svg
@@ -105,7 +105,7 @@ export default function HistoryTransactionPage() {
                                                 fill="currentColor"
                                                 className={`w-5 ${
                                                     sortColumn === "totalAmount"
-                                                        ? "text-black border border-black"
+                                                        ? "border border-black text-black"
                                                         : "text-gray-500"
                                                 }`}
                                             >
@@ -119,7 +119,7 @@ export default function HistoryTransactionPage() {
                                     </div>
                                 </th>
                                 <th className="border-b border-gray-300 px-4 py-2 text-right">
-                                    <div className="flex gap-2 justify-end items-center">
+                                    <div className="flex items-center justify-end gap-2">
                                         <p>Total Paid</p>
                                         <button onClick={() => handleSortButton("totalPay")}>
                                             <svg
@@ -128,7 +128,7 @@ export default function HistoryTransactionPage() {
                                                 fill="currentColor"
                                                 className={`w-5 ${
                                                     sortColumn === "totalPay"
-                                                        ? "text-black border border-black"
+                                                        ? "border border-black text-black"
                                                         : "text-gray-500"
                                                 }`}
                                             >
@@ -168,7 +168,7 @@ export default function HistoryTransactionPage() {
                                             {toIDRCurrency(transaction.total_pay as number)}
                                         </td>
                                         <td className="border-gray-300 px-4 py-2 text-center">
-                                            <button className="px-2 py-1 bg-blue-500 text-white rounded hover:brightness-90">
+                                            <button className="rounded bg-blue-500 px-2 py-1 text-white hover:brightness-90">
                                                 <Link href={`/history/detail/${transaction.id}`}>
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"

@@ -38,7 +38,7 @@ export default function TransactionDetailPage() {
         <Error error={transactionError} />
     ) : (
         <div className="mx-6 w-full">
-            <div className="flex gap-4 items-center">
+            <div className="flex items-center gap-4">
                 <Link href={"/history"}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -49,27 +49,27 @@ export default function TransactionDetailPage() {
                         <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z" />
                     </svg>
                 </Link>
-                <h1 className="text-2xl font-bold my-4">Transaction Detail</h1>
+                <h1 className="my-4 text-2xl font-bold">Transaction Detail</h1>
             </div>
-            <div className="bg-white rounded-lg px-4 py-2 shadow-lg border">
-                <p className="font-bold ">Transaction ID: POS-{transactionResponse?.data.id.replaceAll("-", "")}</p>
+            <div className="rounded-lg border bg-white px-4 py-2 shadow-lg">
+                <p className="font-bold">Transaction ID: POS-{transactionResponse?.data.id.replaceAll("-", "")}</p>
                 <p className="">{formatDate(transactionResponse?.data.created_at as string)}</p>
                 <p className="mt-2 font-bold">Detail Items</p>
-                <table className="min-w-full bg-white border border-gray-300">
+                <table className="min-w-full border border-gray-300 bg-white">
                     <thead className="bg-gray-100">
                         <tr>
-                            <th className="py-3 px-4 text-left text-sm font-medium text-gray-700 uppercase">
+                            <th className="px-4 py-3 text-left text-sm font-medium uppercase text-gray-700">
                                 Product Name
                             </th>
-                            <th className="py-3 px-4 text-sm font-medium text-gray-700 uppercase">Product Price</th>
-                            <th className="py-3 px-4 text-sm font-medium text-gray-700 uppercase">Quantity</th>
-                            <th className="py-3 px-4 text-sm font-medium text-gray-700 uppercase">Sub Total</th>
+                            <th className="px-4 py-3 text-sm font-medium uppercase text-gray-700">Product Price</th>
+                            <th className="px-4 py-3 text-sm font-medium uppercase text-gray-700">Quantity</th>
+                            <th className="px-4 py-3 text-sm font-medium uppercase text-gray-700">Sub Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         {transactionResponse?.data?.details?.map((transactionItem) => (
                             <tr key={transactionItem.id} className="border-b border-gray-200 hover:bg-gray-50">
-                                <td className="py-4 px-4 flex items-center space-x-4">
+                                <td className="flex items-center space-x-4 px-4 py-4">
                                     <Image
                                         src={transactionItem.image_url || "/default-product-image.png"}
                                         width={60}
@@ -81,38 +81,38 @@ export default function TransactionDetailPage() {
                                         {capitalizeEachWord(transactionItem.product_name)}
                                     </p>
                                 </td>
-                                <td className="py-4 px-4 text-sm text-gray-700 text-center">
+                                <td className="px-4 py-4 text-center text-sm text-gray-700">
                                     {toIDRCurrency(transactionItem.product_price)}
                                 </td>
-                                <td className="py-4 px-4 text-sm text-gray-700 text-center">
+                                <td className="px-4 py-4 text-center text-sm text-gray-700">
                                     {transactionItem.quantity}
                                 </td>
-                                <td className="py-4 px-4 text-sm text-gray-700 text-center">
+                                <td className="px-4 py-4 text-center text-sm text-gray-700">
                                     {toIDRCurrency(transactionItem.sub_total)}
                                 </td>
                             </tr>
                         ))}
                         <tr className="border-t border-gray-200 bg-gray-50">
                             <td colSpan={2} className="bg-gray-100"></td>
-                            <td className="py-4 px-4 text-sm font-bold text-gray-700">Total Amount</td>
-                            <td className="py-4 px-4 text-sm text-center font-bold text-gray-700">
+                            <td className="px-4 py-4 text-sm font-bold text-gray-700">Total Amount</td>
+                            <td className="px-4 py-4 text-center text-sm font-bold text-gray-700">
                                 {toIDRCurrency(transactionResponse?.data.total_amount as number)}
                             </td>
                         </tr>
                         <tr className="border-t border-gray-200 bg-gray-50">
                             <td colSpan={2} className="bg-gray-100"></td>
-                            <td className="py-4 px-4 text-sm font-bold text-gray-700">Total Pay</td>
-                            <td className="py-4 px-4 text-sm text-center font-bold text-gray-700">
+                            <td className="px-4 py-4 text-sm font-bold text-gray-700">Total Pay</td>
+                            <td className="px-4 py-4 text-center text-sm font-bold text-gray-700">
                                 {toIDRCurrency(transactionResponse?.data.total_pay as number)}
                             </td>
                         </tr>
                         <tr className="border-t border-gray-200 bg-gray-50">
                             <td colSpan={2} className="bg-gray-100"></td>
-                            <td className="py-4 px-4 text-sm font-bold text-gray-700">Change</td>
-                            <td className="py-4 px-4 text-sm text-center font-bold text-gray-700">
+                            <td className="px-4 py-4 text-sm font-bold text-gray-700">Change</td>
+                            <td className="px-4 py-4 text-center text-sm font-bold text-gray-700">
                                 {toIDRCurrency(
                                     (transactionResponse?.data?.total_pay || 0) -
-                                        (transactionResponse?.data?.total_amount || 0)
+                                        (transactionResponse?.data?.total_amount || 0),
                                 )}
                             </td>
                         </tr>

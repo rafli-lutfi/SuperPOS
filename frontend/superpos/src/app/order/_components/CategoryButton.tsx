@@ -12,7 +12,7 @@ export default function CategoryButtons({ categories, selectedCategory, handleCa
     return (
         <select
             value={selectedCategory}
-            className="px-2 py-1 rounded-lg border shadow-lg"
+            className="rounded-lg border px-2 py-1 shadow-lg"
             onChange={(e) => handleCategoryButton(e.target.value)}
         >
             <option value={""}>All Items</option>

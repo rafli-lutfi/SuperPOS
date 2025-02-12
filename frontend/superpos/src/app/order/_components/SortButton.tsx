@@ -6,7 +6,7 @@ type SortButtonProps = {
 export default function SortButton({ selectedSort, handleSortButton }: SortButtonProps) {
     return (
         <select
-            className="px-2 py-1 rounded-lg border shadow-lg"
+            className="rounded-lg border px-2 py-1 shadow-lg"
             value={selectedSort}
             onChange={(e) => handleSortButton(e.target.value)}
         >

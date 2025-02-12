@@ -105,7 +105,7 @@ export default function ProductForm({ product, type }: ProductFormProps) {
     ) : categoriesError ? (
         <Error error={categoriesError} />
     ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full gap-6 p-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-6 p-4">
             {/* ID Field */}
             <div className="flex flex-col gap-1">
                 <label htmlFor="id" className="text-sm font-medium text-gray-700">
@@ -115,7 +115,7 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                     type="number"
                     id="id"
                     disabled
-                    className="border border-gray-300 p-2 rounded-md bg-gray-100 text-gray-600 cursor-not-allowed"
+                    className="cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 p-2 text-gray-600"
                     placeholder="Auto-Generated"
                     {...register("id")}
                 />
@@ -129,11 +129,11 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                 <input
                     type="text"
                     id="name"
-                    className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="rounded-md border border-gray-300 p-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter product name"
                     {...register("name")}
                 />
-                {errors.name && <p className="text-red-500 text-sm italic">⚠️ {errors.name.message}</p>}
+                {errors.name && <p className="text-sm italic text-red-500">⚠️ {errors.name.message}</p>}
             </div>
 
             {/* Category Field */}
@@ -142,7 +142,7 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                     Category:
                 </label>
                 <select
-                    className="px-2 py-1 rounded-lg border shadow-lg"
+                    className="rounded-lg border px-2 py-1 shadow-lg"
                     {...register("category_id")}
                     value={selectedCategory}
                 >
@@ -152,7 +152,7 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                         </option>
                     ))}
                 </select>
-                {errors.category_id && <p className="text-red-500 text-sm italic">⚠️ {errors.category_id.message}</p>}
+                {errors.category_id && <p className="text-sm italic text-red-500">⚠️ {errors.category_id.message}</p>}
             </div>
 
             {/* Description Field */}
@@ -162,7 +162,7 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                 </label>
                 <textarea
                     id="description"
-                    className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="rounded-md border border-gray-300 p-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                     rows={4}
                     placeholder="Describe the product"
                     {...register("description")}
@@ -170,7 +170,7 @@ export default function ProductForm({ product, type }: ProductFormProps) {
             </div>
 
             {/* Price and Stock Fields (Side by Side) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="flex flex-col gap-1">
                     <label htmlFor="price" className="text-sm font-medium text-gray-700">
                         Price:
@@ -178,11 +178,11 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                     <input
                         type="number"
                         id="price"
-                        className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                        className="rounded-md border border-gray-300 p-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter price (cth. Rp 20.000)"
                         {...register("price")}
                     />
-                    {errors.price && <p className="text-red-500 text-sm italic">⚠️ {errors.price.message}</p>}
+                    {errors.price && <p className="text-sm italic text-red-500">⚠️ {errors.price.message}</p>}
                 </div>
                 <div className="flex flex-col gap-1">
                     <label htmlFor="stock" className="text-sm font-medium text-gray-700">
@@ -191,39 +191,39 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                     <input
                         type="number"
                         id="stock"
-                        className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                        className="rounded-md border border-gray-300 p-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter stock quantity"
                         {...register("stock")}
                     />
-                    {errors.stock && <p className="text-red-500 text-sm italic">⚠️ {errors.stock.message}</p>}
+                    {errors.stock && <p className="text-sm italic text-red-500">⚠️ {errors.stock.message}</p>}
                 </div>
             </div>
 
             {/* Image URL Field */}
             <div className="flex flex-col gap-1">
                 <label htmlFor="imageUrl" className="text-sm font-medium text-gray-700">
-                    Image URL <span className="text-xs italic font-bold">(Must be from Tokopedia)</span> :
+                    Image URL <span className="text-xs font-bold italic">(Must be from Tokopedia)</span> :
                 </label>
                 <input
                     type="text"
                     id="imageUrl"
-                    className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="rounded-md border border-gray-300 p-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
                     {...register("image_url")}
                 />
-                {errors.image_url && <p className="text-red-500 text-sm italic">⚠️ {errors.image_url.message}</p>}
+                {errors.image_url && <p className="text-sm italic text-red-500">⚠️ {errors.image_url.message}</p>}
             </div>
 
             {/* Image Preview */}
             <div className="flex flex-col items-center gap-2">
                 <p className="text-sm font-medium text-gray-700">Preview Image</p>
-                <div className="w-40 h-40 border border-gray-300 rounded-md overflow-hidden shadow-sm">
+                <div className="h-40 w-40 overflow-hidden rounded-md border border-gray-300 shadow-sm">
                     <Image
                         src={imageUrl || "/default-product-image.png"}
                         alt="Product Preview"
                         width={160}
                         height={160}
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                     />
                 </div>
             </div>
@@ -231,7 +231,7 @@ export default function ProductForm({ product, type }: ProductFormProps) {
             {/* Submit Button */}
             <button
                 type="submit"
-                className="mt-6 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
+                className="mt-6 rounded-md bg-blue-600 px-4 py-2 text-white transition-all hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
                 {product ? "Update Product" : "Save Product"}
             </button>

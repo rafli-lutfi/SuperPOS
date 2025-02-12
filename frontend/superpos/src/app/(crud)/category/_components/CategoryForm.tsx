@@ -74,7 +74,7 @@ export default function CategoryForm({ category, type }: CategoryFormProps) {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full gap-6 p-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-6 p-4">
             {/* ID Field */}
             <div className="flex flex-col gap-1">
                 <label htmlFor="id" className="text-sm font-medium text-gray-700">
@@ -84,7 +84,7 @@ export default function CategoryForm({ category, type }: CategoryFormProps) {
                     type="number"
                     id="id"
                     disabled
-                    className="border border-gray-300 p-2 rounded-md bg-gray-100 text-gray-600 cursor-not-allowed"
+                    className="cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 p-2 text-gray-600"
                     placeholder="Auto-Generated"
                     {...register("id")}
                 />
@@ -98,11 +98,11 @@ export default function CategoryForm({ category, type }: CategoryFormProps) {
                 <input
                     type="text"
                     id="name"
-                    className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="rounded-md border border-gray-300 p-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter product name"
                     {...register("name")}
                 />
-                {errors.name && <p className="text-red-500 text-sm italic">⚠️ {errors.name.message}</p>}
+                {errors.name && <p className="text-sm italic text-red-500">⚠️ {errors.name.message}</p>}
             </div>
 
             {/* Description Field */}
@@ -112,7 +112,7 @@ export default function CategoryForm({ category, type }: CategoryFormProps) {
                 </label>
                 <textarea
                     id="description"
-                    className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    className="rounded-md border border-gray-300 p-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                     rows={4}
                     placeholder="Describe the product"
                     {...register("description")}
@@ -122,7 +122,7 @@ export default function CategoryForm({ category, type }: CategoryFormProps) {
             {/* Submit Button */}
             <button
                 type="submit"
-                className="mt-6 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
+                className="mt-6 rounded-md bg-blue-600 px-4 py-2 text-white transition-all hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
                 {category ? "Update Category" : "Save Category"}
             </button>

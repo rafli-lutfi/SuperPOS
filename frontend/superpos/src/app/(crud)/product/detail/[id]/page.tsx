@@ -38,7 +38,7 @@ export default function DetailProductPage() {
         <Error error={productError} />
     ) : (
         <div className="mx-6 w-full">
-            <div className="flex gap-4 items-center my-4">
+            <div className="my-4 flex items-center gap-4">
                 <Link href={"/product"}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -51,14 +51,14 @@ export default function DetailProductPage() {
                 </Link>
                 <h1 className="text-2xl font-bold">Detail Product</h1>
             </div>
-            <div className="bg-white rounded-lg px-4 py-2 shadow-lg border flex items-center gap-2">
+            <div className="flex items-center gap-2 rounded-lg border bg-white px-4 py-2 shadow-lg">
                 <Image
                     src={productResponse?.data.image_url || "/default-product-image.png"}
                     alt={productResponse?.data.name || "default product image"}
                     width={200}
                     height={200}
                 />
-                <div className="text-sm w-full flex flex-col gap-2">
+                <div className="flex w-full flex-col gap-2 text-sm">
                     <p>
                         <span className="font-bold">Product ID:</span> {productResponse?.data.id}
                     </p>

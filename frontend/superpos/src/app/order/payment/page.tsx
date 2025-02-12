@@ -86,7 +86,7 @@ export default function PaymentPage() {
 
                 const payment: Response<{ change: number }> = await updater(
                     `${API_URL}/transactions/${transactionId}/pay`,
-                    { total_pay: paidAmount }
+                    { total_pay: paidAmount },
                 );
 
                 Swal.fire({
@@ -115,14 +115,14 @@ export default function PaymentPage() {
     };
 
     return (
-        <main className="h-screen w-full flex justify-between">
+        <main className="flex h-screen w-full justify-between">
             <div className="mx-6 h-full w-2/3 overflow-auto" id="scrollable">
-                <div className="my-4 flex justify-between items-center">
+                <div className="my-4 flex items-center justify-between">
                     <h1 className="text-2xl font-bold">Order Details</h1>
                 </div>
 
                 <motion.div
-                    className="mx-2 mb-4 h-full flex flex-col gap-4 overflow-y-auto"
+                    className="mx-2 mb-4 flex h-full flex-col gap-4 overflow-y-auto"
                     initial="hidden"
                     animate="visible"
                     variants={itemListVariants}
@@ -130,7 +130,7 @@ export default function PaymentPage() {
                     {dataCart.map((item, index) => (
                         <motion.div
                             key={item.product.id}
-                            className="px-4 py-2 flex gap-4 bg-white items-center rounded-lg border border-slate-200 shadow-lg"
+                            className="flex items-center gap-4 rounded-lg border border-slate-200 bg-white px-4 py-2 shadow-lg"
                             variants={itemVariants}
                         >
                             <span className="text-sm">{index + 1}</span>
@@ -144,7 +144,7 @@ export default function PaymentPage() {
                             <div className="w-full">
                                 <p className="text-sm">{capitalizeEachWord(item.product.name)}</p>
 
-                                <p className="mt-2 text-xs flex justify-between">
+                                <p className="mt-2 flex justify-between text-xs">
                                     <span>{toIDRCurrency(item.product.price)}</span>
                                     <span>x {item.quantity}</span>
                                     <span>{toIDRCurrency(item.subTotal)}</span>
@@ -159,24 +159,24 @@ export default function PaymentPage() {
                 <h2 className="p-4 text-lg font-bold">Payment</h2>
                 <form className="px-4" onSubmit={handleOnSubmitButton}>
                     <p className="flex justify-between">
-                        Total: <span className="text-md font-bold ">{toIDRCurrency(total)}</span>
+                        Total: <span className="text-md font-bold">{toIDRCurrency(total)}</span>
                     </p>
 
                     {/* paid amount */}
-                    <div className="mt-2 flex justify-between items-center text-left gap-2">
+                    <div className="mt-2 flex items-center justify-between gap-2 text-left">
                         <label htmlFor="paid">Paid Amount:</label>
                         <input
                             type="number"
                             name="paid"
                             id="paid"
                             placeholder="Rp. 0"
-                            className="border indent-2 h-12 rounded-lg"
+                            className="h-12 rounded-lg border indent-2"
                             required
                             onChange={handlePaidAmountInput}
                         />
                     </div>
                     <p className="mt-2 flex justify-between">
-                        Change: <span className="text-md font-bold ">{toIDRCurrency(change)}</span>
+                        Change: <span className="text-md font-bold">{toIDRCurrency(change)}</span>
                     </p>
 
                     {/* payment method */}
@@ -195,13 +195,13 @@ export default function PaymentPage() {
                                 />
                                 <label
                                     htmlFor="cashMethod"
-                                    className="py-2 border bg-background shadow-md rounded-lg flex flex-col items-center peer-disabled:opacity-50 peer-checked:border-black peer-checked:border-2"
+                                    className="flex flex-col items-center rounded-lg border bg-background py-2 shadow-md peer-checked:border-2 peer-checked:border-black peer-disabled:opacity-50"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 -960 960 960"
                                         fill="currentColor"
-                                        className="text-interactive w-6 text-center "
+                                        className="w-6 text-center text-interactive"
                                     >
                                         <path d="M560-440q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM280-320q-33 0-56.5-23.5T200-400v-320q0-33 23.5-56.5T280-800h560q33 0 56.5 23.5T920-720v320q0 33-23.5 56.5T840-320H280Zm80-80h400q0-33 23.5-56.5T840-480v-160q-33 0-56.5-23.5T760-720H360q0 33-23.5 56.5T280-640v160q33 0 56.5 23.5T360-400Zm440 240H120q-33 0-56.5-23.5T40-240v-440h80v440h680v80ZM280-400v-320 320Z" />
                                     </svg>
@@ -222,13 +222,13 @@ export default function PaymentPage() {
                                 />
                                 <label
                                     htmlFor="creditMethod"
-                                    className="py-2 border bg-background shadow-md rounded-lg flex flex-col items-center peer-disabled:opacity-50 peer-checked:border-black peer-checked:border-2"
+                                    className="flex flex-col items-center rounded-lg border bg-background py-2 shadow-md peer-checked:border-2 peer-checked:border-black peer-disabled:opacity-50"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 -960 960 960"
                                         fill="currentColor"
-                                        className="text-interactive w-6 text-center"
+                                        className="w-6 text-center text-interactive"
                                     >
                                         <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z" />
                                     </svg>
@@ -249,13 +249,13 @@ export default function PaymentPage() {
                                 />
                                 <label
                                     htmlFor="eWalletMethod"
-                                    className="py-2 border bg-background shadow-md rounded-lg flex flex-col items-center peer-disabled:opacity-50 peer-checked:border-black peer-checked:border-2"
+                                    className="flex flex-col items-center rounded-lg border bg-background py-2 shadow-md peer-checked:border-2 peer-checked:border-black peer-disabled:opacity-50"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 -960 960 960"
                                         fill="currentColor"
-                                        className="text-interactive w-6 text-center"
+                                        className="w-6 text-center text-interactive"
                                     >
                                         <path d="M200-200v-560 560Zm0 80q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v100h-80v-100H200v560h560v-100h80v100q0 33-23.5 56.5T760-120H200Zm320-160q-33 0-56.5-23.5T440-360v-240q0-33 23.5-56.5T520-680h280q33 0 56.5 23.5T880-600v240q0 33-23.5 56.5T800-280H520Zm280-80v-240H520v240h280Zm-160-60q25 0 42.5-17.5T700-480q0-25-17.5-42.5T640-540q-25 0-42.5 17.5T580-480q0 25 17.5 42.5T640-420Z" />
                                     </svg>
@@ -265,7 +265,7 @@ export default function PaymentPage() {
                         </div>
                         <button
                             type="submit"
-                            className="mt-6 py-2 px-4 w-full bg-interactive rounded-lg font-bold hover:bg-[#008CDB] hover:text-white disabled:bg-gray-400 disabled:text-black"
+                            className="mt-6 w-full rounded-lg bg-interactive px-4 py-2 font-bold hover:bg-[#008CDB] hover:text-white disabled:bg-gray-400 disabled:text-black"
                             disabled={paidAmount <= total}
                         >
                             Confirm Payment

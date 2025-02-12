@@ -47,7 +47,7 @@ export default function CashModal({ isOpen, closeModal }: CashModalProps) {
 
             const payment: Response<{ change: number }> = await updater(
                 `http://localhost:8080/api/transactions/${transactionId}/pay`,
-                { total_pay: paidAmount }
+                { total_pay: paidAmount },
             );
 
             Swal.fire({
@@ -72,7 +72,7 @@ export default function CashModal({ isOpen, closeModal }: CashModalProps) {
                 <form onSubmit={handleOnSubmitButton} className="">
                     <div className="mt-2 px-7 py-3">
                         {/* paid amount */}
-                        <div className="flex flex-col text-left gap-2">
+                        <div className="flex flex-col gap-2 text-left">
                             <label htmlFor="paid" className="font-bold">
                                 Paid Amount:
                             </label>
@@ -81,21 +81,21 @@ export default function CashModal({ isOpen, closeModal }: CashModalProps) {
                                 name="paid"
                                 id="paid"
                                 placeholder="Rp. 0"
-                                className="border indent-2 h-12 w-full"
+                                className="h-12 w-full border indent-2"
                                 required
                                 onChange={handlePaidAmountInput}
                             />
                         </div>
                     </div>
-                    <div className="flex gap-4 justify-center mt-4">
+                    <div className="mt-4 flex justify-center gap-4">
                         <button
-                            className="px-4 py-2 bg-secondary text-white text-base font-medium rounded-md shadow-sm hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            className="rounded-md bg-secondary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
                             onClick={handleOnSubmitButton}
                         >
                             Confirm
                         </button>
                         <button
-                            className="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            className="rounded-md bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
                             onClick={closeModal}
                         >
                             Close

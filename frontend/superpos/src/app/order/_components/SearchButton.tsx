@@ -20,11 +20,11 @@ export default function SearchButton({ handleSearchButton }: SearchButtonProps) 
                 id="search"
                 placeholder="search here..."
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="indent-2 border shadow-lg rounded-lg"
+                className="rounded-lg border indent-2 shadow-lg"
             />
             <button
                 type="submit"
-                className="px-2 py-1 bg-white border shadow-lg rounded-lg hover:bg-interactive hover:text-white"
+                className="rounded-lg border bg-white px-2 py-1 shadow-lg hover:bg-interactive hover:text-white"
             >
                 search
             </button>

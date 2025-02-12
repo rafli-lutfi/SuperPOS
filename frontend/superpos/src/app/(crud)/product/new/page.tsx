@@ -19,7 +19,7 @@ export default function CreateProductPage() {
 
     return (
         <div className="mx-6 w-full">
-            <div className="flex gap-4 items-center my-4">
+            <div className="my-4 flex items-center gap-4">
                 <Link href={"/product"}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +32,7 @@ export default function CreateProductPage() {
                 </Link>
                 <h1 className="text-2xl font-bold">New Product</h1>
             </div>
-            <div className="bg-white rounded-lg px-4 py-2 shadow-lg border flex items-center gap-2">
+            <div className="flex items-center gap-2 rounded-lg border bg-white px-4 py-2 shadow-lg">
                 <ProductForm type={type as "new" | "edit"} />
             </div>
         </div>

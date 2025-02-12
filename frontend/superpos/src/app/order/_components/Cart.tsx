@@ -54,15 +54,15 @@ export default function Cart() {
     return (
         <>
             <h2 className="p-4 text-lg font-bold">Current Order</h2>
-            <div className="h-full flex-1 flex flex-col justify-between">
+            <div className="flex h-full flex-1 flex-col justify-between">
                 <div
                     ref={cartContainerRef}
-                    className="mx-2 pb-8 h-full max-h-[75vh] flex flex-col gap-2 overflow-y-auto"
+                    className="mx-2 flex h-full max-h-[75vh] flex-col gap-2 overflow-y-auto pb-8"
                 >
                     {dataCart.map((item, index) => (
                         <motion.div
                             key={item.product.id}
-                            className="px-4 py-2 flex gap-4 bg-background items-center rounded-lg border border-slate-200 shadow-lg"
+                            className="flex items-center gap-4 rounded-lg border border-slate-200 bg-background px-4 py-2 shadow-lg"
                             initial="hidden"
                             animate="visible"
                             variants={cartVariants}
@@ -78,11 +78,11 @@ export default function Cart() {
                             <div className="w-full">
                                 <p className="text-sm">{capitalizeEachWord(item.product.name)}</p>
 
-                                <div className="mt-2 flex justify-between items-center">
+                                <div className="mt-2 flex items-center justify-between">
                                     {/* quantity */}
                                     <div className="flex">
                                         <button
-                                            className="px-2 py-1 rounded-l-2xl bg-white border disabled:bg-slate-200 shadow"
+                                            className="rounded-l-2xl border bg-white px-2 py-1 shadow disabled:bg-slate-200"
                                             onClick={() => handleDecreaseQtyButton(item.product)}
                                             disabled={item.quantity <= 1}
                                         >
@@ -95,9 +95,9 @@ export default function Cart() {
                                                 <path d="M200-440v-80h560v80H200Z" />
                                             </svg>
                                         </button>
-                                        <p className="w-8 text-center text-sm bg-white shadow">{item.quantity}</p>
+                                        <p className="w-8 bg-white text-center text-sm shadow">{item.quantity}</p>
                                         <button
-                                            className="px-2 py-1 rounded-r-2xl bg-white border shadow"
+                                            className="rounded-r-2xl border bg-white px-2 py-1 shadow"
                                             onClick={() => handleIncreaseQtyButton(item.product)}
                                         >
                                             <svg
@@ -122,7 +122,7 @@ export default function Cart() {
                                     </button>
                                 </div>
 
-                                <p className="mt-2 text-xs flex justify-between">
+                                <p className="mt-2 flex justify-between text-xs">
                                     <span>{toIDRCurrency(item.product.price)}</span>
                                     <span>x {item.quantity}</span>
                                     <span>{toIDRCurrency(item.subTotal)}</span>
@@ -131,14 +131,14 @@ export default function Cart() {
                         </motion.div>
                     ))}
                 </div>
-                <div className="h-fit mx-2 mb-2 flex-shrink-0 flex flex-col justify-between gap-2">
-                    <p className="text-xl font-bold flex justify-between">
+                <div className="mx-2 mb-2 flex h-fit flex-shrink-0 flex-col justify-between gap-2">
+                    <p className="flex justify-between text-xl font-bold">
                         <span>Total:</span>
                         <span>{toIDRCurrency(total)}</span>
                     </p>
                     <Link href="/order/payment">
                         <button
-                            className="px-4 py-2 w-full rounded-lg font-bold bg-interactive hover:text-white hover:bg-primary disabled:bg-slate-300 disabled:hover:text-black"
+                            className="w-full rounded-lg bg-interactive px-4 py-2 font-bold hover:bg-primary hover:text-white disabled:bg-slate-300 disabled:hover:text-black"
                             disabled={dataCart.length < 1}
                         >
                             Proceed to Payment

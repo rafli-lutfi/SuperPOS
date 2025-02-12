@@ -90,14 +90,14 @@ export default function ProductPage() {
     ) : productError ? (
         <Error error={productError} />
     ) : (
-        <div className="mx-6 w-full h-full flex flex-col">
-            <h1 className="text-2xl font-bold my-4">Product</h1>
+        <div className="mx-6 flex h-full w-full flex-col">
+            <h1 className="my-4 text-2xl font-bold">Product</h1>
             <Link href="/product/new">
-                <button className="px-2 py-1 mb-4 bg-interactive text-white rounded hover:brightness-90 hover:text-black">
+                <button className="mb-4 rounded bg-interactive px-2 py-1 text-white hover:text-black hover:brightness-90">
                     + Create New Product
                 </button>
             </Link>
-            <div className="h-full rounded-lg shadow-lg overflow-auto mb-4" id="table-container">
+            <div className="mb-4 h-full overflow-auto rounded-lg shadow-lg" id="table-container">
                 <InfiniteScroll
                     next={() => setSize(size + 1)}
                     hasMore={!isReachEnd}
@@ -110,12 +110,12 @@ export default function ProductPage() {
                         <thead className="sticky top-0">
                             <tr className="bg-gray-100">
                                 <th className="border-b border-gray-300 px-4 py-2 text-center">
-                                    <div className="flex gap-2 justify-center items-center">
+                                    <div className="flex items-center justify-center gap-2">
                                         <p>No</p>
                                     </div>
                                 </th>
                                 <th className="border-b border-gray-300 px-4 py-2 text-center">
-                                    <div className="flex gap-2 justify-center items-center">
+                                    <div className="flex items-center justify-center gap-2">
                                         <p>Product Name</p>
                                         <button onClick={() => handleSortButton("name")}>
                                             <svg
@@ -124,7 +124,7 @@ export default function ProductPage() {
                                                 fill="currentColor"
                                                 className={`w-5 ${
                                                     sortColumn === "name"
-                                                        ? "text-black border border-black"
+                                                        ? "border border-black text-black"
                                                         : "text-gray-500"
                                                 }`}
                                             >
@@ -138,7 +138,7 @@ export default function ProductPage() {
                                     </div>
                                 </th>
                                 <th className="border-b border-gray-300 px-4 py-2 text-center">
-                                    <div className="flex gap-2 justify-center items-center">
+                                    <div className="flex items-center justify-center gap-2">
                                         <p>Category</p>
                                         <button onClick={() => handleSortButton("category")}>
                                             <svg
@@ -147,7 +147,7 @@ export default function ProductPage() {
                                                 fill="currentColor"
                                                 className={`w-5 ${
                                                     sortColumn === "stock"
-                                                        ? "text-black border border-black"
+                                                        ? "border border-black text-black"
                                                         : "text-gray-500"
                                                 }`}
                                             >
@@ -161,7 +161,7 @@ export default function ProductPage() {
                                     </div>
                                 </th>
                                 <th className="border-b border-gray-300 px-4 py-2 text-center">
-                                    <div className="flex gap-2 justify-center items-center">
+                                    <div className="flex items-center justify-center gap-2">
                                         <p>Price</p>
                                         <button onClick={() => handleSortButton("price")}>
                                             <svg
@@ -170,7 +170,7 @@ export default function ProductPage() {
                                                 fill="currentColor"
                                                 className={`w-5 ${
                                                     sortColumn === "price"
-                                                        ? "text-black border border-black"
+                                                        ? "border border-black text-black"
                                                         : "text-gray-500"
                                                 }`}
                                             >
@@ -211,7 +211,7 @@ export default function ProductPage() {
                                             </p>
                                         </td>
                                         <td
-                                            className="border-gray-300 px-4 py-2 text-center cursor-default"
+                                            className="cursor-default border-gray-300 px-4 py-2 text-center"
                                             title={product.category.name}
                                         >
                                             {truncateName(product.category.name, 20)}
@@ -220,10 +220,10 @@ export default function ProductPage() {
                                             {toIDRCurrency(product.price)}
                                         </td>
                                         <td className="border-gray-300 px-4 py-2 text-center">
-                                            <div className="flex gap-2  justify-center items-center">
+                                            <div className="flex items-center justify-center gap-2">
                                                 {/* CREATE PRODUCT */}
                                                 <Link href={`/product/detail/${product.id}`}>
-                                                    <button className="px-2 py-1 bg-blue-500 text-white rounded hover:brightness-90">
+                                                    <button className="rounded bg-blue-500 px-2 py-1 text-white hover:brightness-90">
                                                         <svg
                                                             xmlns="http://www.w3.org/2000/svg"
                                                             viewBox="0 -960 960 960"
@@ -236,7 +236,7 @@ export default function ProductPage() {
                                                 </Link>
                                                 {/* EDIT BUTTON */}
                                                 <Link href={`/product/edit/${product.id}`}>
-                                                    <button className="px-2 py-1 bg-highlight text-white rounded hover:brightness-90">
+                                                    <button className="rounded bg-highlight px-2 py-1 text-white hover:brightness-90">
                                                         <svg
                                                             xmlns="http://www.w3.org/2000/svg"
                                                             viewBox="0 -960 960 960"
@@ -249,7 +249,7 @@ export default function ProductPage() {
                                                 </Link>
                                                 {/* DELETE BUTTON */}
                                                 <button
-                                                    className="px-2 py-1 bg-error text-white rounded hover:brightness-90"
+                                                    className="rounded bg-error px-2 py-1 text-white hover:brightness-90"
                                                     onClick={() => handleDeleteButton(product.id, product.name)}
                                                 >
                                                     <svg

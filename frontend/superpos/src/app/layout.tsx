@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <body className={`${manrope.className} bg-background antialiased`}>
                     <div className="flex">
                         <Sidebar />
-                        <main className="h-screen w-full flex justify-between">{children}</main>
+                        <main className="flex h-screen w-full justify-between">{children}</main>
                     </div>
                 </body>
             </html>

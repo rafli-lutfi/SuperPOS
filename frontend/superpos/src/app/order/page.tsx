@@ -31,7 +31,7 @@ export default function OrderPage() {
     const [isLoading, setIsLoading] = useState<boolean>();
     const [selectedCategory, setSelectedCategory] = useState<string>(queryParams.get("category") || "");
     const [selectedSort, setSelectedSort] = useState(
-        `${queryParams.get("sort")}_${queryParams.get("order")}` || "name_asc"
+        `${queryParams.get("sort")}_${queryParams.get("order")}` || "name_asc",
     );
 
     const {
@@ -94,12 +94,12 @@ export default function OrderPage() {
     return (
         <>
             <div className="mx-6 h-full w-2/3 overflow-auto" id="scrollable">
-                <div className="my-4 flex justify-between items-center">
+                <div className="my-4 flex items-center justify-between">
                     <h1 className="text-2xl font-bold">Order</h1>
                     <SearchButton handleSearchButton={handleSearchButton} />
                 </div>
 
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between">
                     <CategoryButtons
                         categories={categoriesResponse?.data}
                         selectedCategory={selectedCategory}
@@ -146,18 +146,18 @@ function Catalog({
             next={handleLoadMoreData}
             hasMore={isReachEnd}
             loader={
-                <div className="flex mt-2 justify-center col-span-2 md:col-span-3">
+                <div className="col-span-2 mt-2 flex justify-center md:col-span-3">
                     <Loading />
                 </div>
             }
             dataLength={productsResponse?.length ?? 0}
             scrollableTarget="scrollable"
-            className="my-4 grid grid-cols-2 md:grid-cols-3 gap-2"
+            className="my-4 grid grid-cols-2 gap-2 md:grid-cols-3"
         >
             {productsResponse?.map((productsGroup) =>
                 productsGroup.data.products.map((product) => (
                     <ProductCard key={product.id} product={product} onClickProduct={handleProductClick} />
-                ))
+                )),
             )}
         </InfiniteScroll>
     );
