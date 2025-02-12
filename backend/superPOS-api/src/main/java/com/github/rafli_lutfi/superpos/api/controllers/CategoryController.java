@@ -23,8 +23,10 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<?>> getAllCategories() {
-        List<Category> categories = categoryService.findAll();
+    public ResponseEntity<ApiResponse<?>> getAllCategories(
+            @RequestParam(value = "order", defaultValue = "asc") String order
+    ) {
+        List<Category> categories = categoryService.findAll(order);
         List<CategoryResponseDTO> responseDTO = CategoryResponseMapper.toListCategoryResponseDTO(categories);
 
         ApiResponse<Object> apiResponse = new ApiResponse<>(HttpStatus.OK.value(), "success", responseDTO);

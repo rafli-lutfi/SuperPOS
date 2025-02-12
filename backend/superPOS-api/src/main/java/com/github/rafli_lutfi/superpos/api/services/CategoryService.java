@@ -8,6 +8,7 @@ import com.github.rafli_lutfi.superpos.api.utils.customException.RecordAlreadyEx
 import com.github.rafli_lutfi.superpos.api.utils.customException.RecordNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +19,9 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<Category> findAll(String order) {
+        Sort.Direction orderDirection = order.equalsIgnoreCase("asc")? Sort.Direction.ASC : Sort.Direction.DESC;
+        return categoryRepository.findAll(Sort.by(orderDirection, "name", "id"));
     }
 
     public Category findById(Long id){
