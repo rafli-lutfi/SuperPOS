@@ -44,8 +44,7 @@ export default function ProductCard({ product, onClickProduct }: ProductCardProp
                 />
             </div>
             <div className="mt-4 h-full w-full flex flex-col justify-between">
-                <p className="cursor-default text-left text-sm font-semibold">{capitalizeEachWord(product.name)}</p>
-                <p className="mt-3 cursor-default text-left text-xs font-semibold">{product.stock} left</p>
+                <p className="cursor-default text-left text-sm font-semibold">{product.name}</p>
                 <div className="mt-3 flex justify-between items-center">
                     <p className="cursor-default text-sm">{toIDRCurrency(product.price)}</p>
                     <p
