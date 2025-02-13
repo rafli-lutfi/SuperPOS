@@ -19,6 +19,10 @@ export default {
                 error: "var(--error)",
                 interactive: "var(--interactive)",
             },
+            screens: {
+                tablet: "600px",
+                laptop: "1024px",
+            },
         },
     },
     plugins: [],

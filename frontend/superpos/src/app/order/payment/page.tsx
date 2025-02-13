@@ -15,6 +15,7 @@ import { resetCart } from "@/libs/features/cart/cartSlice";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// Animation variants for the item list
 const itemListVariants: Variants = {
     hidden: {
         opacity: 0,
@@ -27,6 +28,7 @@ const itemListVariants: Variants = {
     },
 };
 
+// Animation vartiants for individual items
 const itemVariants: Variants = {
     hidden: {
         opacity: 0,
@@ -53,58 +55,61 @@ export default function PaymentPage() {
     const [paidAmount, setPaidAmount] = useState<number>(0);
     const [change, setChange] = useState<number>(0);
 
+    // Redirect to order page if cart is empty
     useEffect(() => {
         if (dataCart.length === 0) {
             router.push("/order");
         }
     }, [dataCart.length, router]);
 
+    // Handle payment method change
     const handleSelectedPaymentMethodChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedPaymentMethod(e.target.value);
     };
 
     const handleOnSubmitButton = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (selectedPaymentMethod === "cash") {
-            if (paidAmount < total) {
-                return Swal.fire({
-                    title: "Insufficient Amount",
-                    icon: "warning",
-                });
-            }
 
-            const payload = {
-                details: dataCart.map((item) => {
-                    return { product_id: item.product.id, quantity: item.quantity };
-                }),
-            };
+        if (selectedPaymentMethod === "cash" && paidAmount < total) {
+            return Swal.fire({
+                title: "Insufficient Amount",
+                icon: "warning",
+            });
+        }
 
-            try {
-                const transaction: Response<Transaction> = await poster(`${API_URL}/transactions`, payload);
+        const payload = {
+            details: dataCart.map((item) => ({
+                product_id: item.product.id,
+                quantity: item.quantity,
+            })),
+        };
 
-                const transactionId = transaction.data.id;
+        try {
+            const transaction: Response<Transaction> = await poster(`${API_URL}/transactions`, payload);
 
-                const payment: Response<{ change: number }> = await updater(
-                    `${API_URL}/transactions/${transactionId}/pay`,
-                    { total_pay: paidAmount },
-                );
+            const transactionId = transaction.data.id;
 
-                Swal.fire({
-                    title: "transaction success",
-                    text: "Change: " + toIDRCurrency(payment.data.change),
-                    icon: "success",
-                    confirmButtonText: "Confirm",
-                    confirmButtonColor: "#00B0FF",
-                });
+            const payment: Response<{ change: number }> = await updater(
+                `${API_URL}/transactions/${transactionId}/pay`,
+                { total_pay: paidAmount }
+            );
 
-                dispatch(resetCart());
-                router.push("/order");
-            } catch (error) {
-                console.error("Error submitting form:", error);
-            }
+            Swal.fire({
+                title: "transaction success",
+                text: "Change: " + toIDRCurrency(payment.data.change),
+                icon: "success",
+                confirmButtonText: "Confirm",
+                confirmButtonColor: "#00B0FF",
+            });
+
+            dispatch(resetCart());
+            router.push("/order");
+        } catch (error) {
+            console.error("Error submitting form:", error);
         }
     };
 
+    // Handle paid amount input
     const handlePaidAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPaidAmount(Number(e.target.value));
         if (Number(e.target.value) >= total) {
@@ -197,14 +202,7 @@ export default function PaymentPage() {
                                     htmlFor="cashMethod"
                                     className="flex flex-col items-center rounded-lg border bg-background py-2 shadow-md peer-checked:border-2 peer-checked:border-black peer-disabled:opacity-50"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 -960 960 960"
-                                        fill="currentColor"
-                                        className="w-6 text-center text-interactive"
-                                    >
-                                        <path d="M560-440q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM280-320q-33 0-56.5-23.5T200-400v-320q0-33 23.5-56.5T280-800h560q33 0 56.5 23.5T920-720v320q0 33-23.5 56.5T840-320H280Zm80-80h400q0-33 23.5-56.5T840-480v-160q-33 0-56.5-23.5T760-720H360q0 33-23.5 56.5T280-640v160q33 0 56.5 23.5T360-400Zm440 240H120q-33 0-56.5-23.5T40-240v-440h80v440h680v80ZM280-400v-320 320Z" />
-                                    </svg>
+                                    <CashIcon />
                                     <p className="text-center text-sm">Cash</p>
                                 </label>
                             </div>
@@ -224,14 +222,7 @@ export default function PaymentPage() {
                                     htmlFor="creditMethod"
                                     className="flex flex-col items-center rounded-lg border bg-background py-2 shadow-md peer-checked:border-2 peer-checked:border-black peer-disabled:opacity-50"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 -960 960 960"
-                                        fill="currentColor"
-                                        className="w-6 text-center text-interactive"
-                                    >
-                                        <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z" />
-                                    </svg>
+                                    <CreditIcon />
                                     <p className="text-center text-sm">Credit</p>
                                 </label>
                             </div>
@@ -251,14 +242,7 @@ export default function PaymentPage() {
                                     htmlFor="eWalletMethod"
                                     className="flex flex-col items-center rounded-lg border bg-background py-2 shadow-md peer-checked:border-2 peer-checked:border-black peer-disabled:opacity-50"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 -960 960 960"
-                                        fill="currentColor"
-                                        className="w-6 text-center text-interactive"
-                                    >
-                                        <path d="M200-200v-560 560Zm0 80q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v100h-80v-100H200v560h560v-100h80v100q0 33-23.5 56.5T760-120H200Zm320-160q-33 0-56.5-23.5T440-360v-240q0-33 23.5-56.5T520-680h280q33 0 56.5 23.5T880-600v240q0 33-23.5 56.5T800-280H520Zm280-80v-240H520v240h280Zm-160-60q25 0 42.5-17.5T700-480q0-25-17.5-42.5T640-540q-25 0-42.5 17.5T580-480q0 25 17.5 42.5T640-420Z" />
-                                    </svg>
+                                    <EwalletIcon />
                                     <p className="text-center text-sm">E-Wallet</p>
                                 </label>
                             </div>
@@ -276,3 +260,36 @@ export default function PaymentPage() {
         </main>
     );
 }
+
+const CashIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 -960 960 960"
+        fill="currentColor"
+        className="w-6 text-center text-interactive"
+    >
+        <path d="M560-440q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM280-320q-33 0-56.5-23.5T200-400v-320q0-33 23.5-56.5T280-800h560q33 0 56.5 23.5T920-720v320q0 33-23.5 56.5T840-320H280Zm80-80h400q0-33 23.5-56.5T840-480v-160q-33 0-56.5-23.5T760-720H360q0 33-23.5 56.5T280-640v160q33 0 56.5 23.5T360-400Zm440 240H120q-33 0-56.5-23.5T40-240v-440h80v440h680v80ZM280-400v-320 320Z" />
+    </svg>
+);
+
+const CreditIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 -960 960 960"
+        fill="currentColor"
+        className="w-6 text-center text-interactive"
+    >
+        <path d="M880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720Zm-720 80h640v-80H160v80Zm0 160v240h640v-240H160Zm0 240v-480 480Z" />
+    </svg>
+);
+
+const EwalletIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 -960 960 960"
+        fill="currentColor"
+        className="w-6 text-center text-interactive"
+    >
+        <path d="M200-200v-560 560Zm0 80q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v100h-80v-100H200v560h560v-100h80v100q0 33-23.5 56.5T760-120H200Zm320-160q-33 0-56.5-23.5T440-360v-240q0-33 23.5-56.5T520-680h280q33 0 56.5 23.5T880-600v240q0 33-23.5 56.5T800-280H520Zm280-80v-240H520v240h280Zm-160-60q25 0 42.5-17.5T700-480q0-25-17.5-42.5T640-540q-25 0-42.5 17.5T580-480q0 25 17.5 42.5T640-420Z" />
+    </svg>
+);

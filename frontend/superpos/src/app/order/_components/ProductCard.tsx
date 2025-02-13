@@ -39,12 +39,12 @@ export default function ProductCard({ product, onClickProduct }: ProductCardProp
                     alt={product.name}
                     width={100}
                     height={100}
-                    className="h-32 w-full lg:h-60"
+                    className="mx-auto h-44 w-44"
                     style={{ objectFit: "contain" }}
                 />
             </div>
             <div className="mt-4 flex h-full w-full flex-col justify-between">
-                <p className="cursor-default text-left text-sm font-semibold">{product.name}</p>
+                <p className="cursor-default text-left text-sm font-semibold">{truncateName(product.name, 40)}</p>
                 <div className="mt-3 flex items-center justify-between">
                     <p className="cursor-default text-sm">{toIDRCurrency(product.price)}</p>
                     <p

@@ -2,11 +2,12 @@ import { useAppDispatch, useAppSelector } from "@/libs/hooks";
 import { increaseQuantity, decreaseQuantity, deleteItem } from "@/libs/features/cart/cartSlice";
 import Image from "next/image";
 import { Product } from "@/types/Product";
-import { capitalizeEachWord, toIDRCurrency } from "@/utils/formatter";
+import { toIDRCurrency, truncateName } from "@/utils/formatter";
 import Link from "next/link";
 import { motion, Variants } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
+// Animation variants for the cart items
 const cartVariants: Variants = {
     hidden: {
         opacity: 0,
@@ -19,37 +20,38 @@ const cartVariants: Variants = {
             type: "spring",
             stiffness: 200,
             damping: 20,
-            mass: 1, // Memengaruhi percepatan animasi
+            mass: 1,
         },
     },
 };
 
 export default function Cart() {
-    const { dataCart, total } = useAppSelector((state) => state.cartSlice);
     const dispatch = useAppDispatch();
-
-    const handleIncreaseQtyButton = (product: Product) => {
-        dispatch(increaseQuantity(product));
-    };
-
-    const handleDecreaseQtyButton = (product: Product) => {
-        dispatch(decreaseQuantity(product));
-    };
-
-    const handleDeleteButton = (product: Product) => {
-        dispatch(deleteItem(product));
-    };
-
+    const { dataCart, total } = useAppSelector((state) => state.cartSlice);
     const cartContainerRef = useRef<HTMLDivElement>(null);
 
+    // Scroll to the bottom of cart when items added or removed
     useEffect(() => {
         if (cartContainerRef.current) {
             cartContainerRef.current.scrollTo({
                 top: cartContainerRef.current.scrollHeight,
-                behavior: "smooth", // Animasi scroll
+                behavior: "smooth",
             });
         }
     }, [dataCart.length]);
+
+    // Event handlers
+    const handleCartAction = useCallback(
+        (action: "increase" | "decrease" | "delete", product: Product) => {
+            const actions = {
+                increase: () => dispatch(increaseQuantity(product)),
+                decrease: () => dispatch(decreaseQuantity(product)),
+                delete: () => dispatch(deleteItem(product)),
+            };
+            actions[action]();
+        },
+        [dispatch]
+    );
 
     return (
         <>
@@ -62,7 +64,7 @@ export default function Cart() {
                     {dataCart.map((item, index) => (
                         <motion.div
                             key={item.product.id}
-                            className="flex items-center gap-4 rounded-lg border border-slate-200 bg-background px-4 py-2 shadow-lg"
+                            className="flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 bg-background px-4 py-2 shadow-lg laptop:flex-nowrap"
                             initial="hidden"
                             animate="visible"
                             variants={cartVariants}
@@ -73,17 +75,17 @@ export default function Cart() {
                                 width={75}
                                 height={75}
                                 alt={item.product.name}
-                                className="rounded-lg"
+                                className="mx-auto rounded-lg"
                             />
                             <div className="w-full">
-                                <p className="text-sm">{capitalizeEachWord(item.product.name)}</p>
+                                <p className="text-sm">{truncateName(item.product.name, 20)}</p>
 
                                 <div className="mt-2 flex items-center justify-between">
                                     {/* quantity */}
                                     <div className="flex">
                                         <button
                                             className="rounded-l-2xl border bg-white px-2 py-1 shadow disabled:bg-slate-200"
-                                            onClick={() => handleDecreaseQtyButton(item.product)}
+                                            onClick={() => handleCartAction("decrease", item.product)}
                                             disabled={item.quantity <= 1}
                                         >
                                             <svg
@@ -98,7 +100,7 @@ export default function Cart() {
                                         <p className="w-8 bg-white text-center text-sm shadow">{item.quantity}</p>
                                         <button
                                             className="rounded-r-2xl border bg-white px-2 py-1 shadow"
-                                            onClick={() => handleIncreaseQtyButton(item.product)}
+                                            onClick={() => handleCartAction("increase", item.product)}
                                         >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -110,7 +112,7 @@ export default function Cart() {
                                             </svg>
                                         </button>
                                     </div>
-                                    <button className="" onClick={() => handleDeleteButton(item.product)}>
+                                    <button className="" onClick={() => handleCartAction("delete", item.product)}>
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 -960 960 960"
