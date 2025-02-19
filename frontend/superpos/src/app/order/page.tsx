@@ -11,7 +11,7 @@ import Loading from "@/components/Loading";
 import CategoryButtons from "./_components/CategoryButton";
 import SearchButton from "./_components/SearchButton";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useAppDispatch, usePagination } from "@/libs/hooks";
+import { useAppDispatch, useAppSelector, usePagination } from "@/libs/hooks";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SortButton from "./_components/SortButton";
 import RightLayout from "@/components/Right";
@@ -25,6 +25,7 @@ export default function OrderPage() {
     const dispatch = useAppDispatch();
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { dataCart } = useAppSelector((state) => state.cartSlice);
     const queryParams = useMemo(() => new URLSearchParams(searchParams.toString()), [searchParams]);
 
     // State management
@@ -126,9 +127,18 @@ export default function OrderPage() {
                     {/* Catalog */}
                     <div className="my-4 grid grid-cols-1 gap-2 tablet:grid-cols-2 laptop:grid-cols-3">
                         {productsResponse?.map((productsGroup) =>
-                            productsGroup.data.products.map((product) => (
-                                <ProductCard key={product.id} product={product} onClickProduct={handleProductClick} />
-                            ))
+                            productsGroup.data.products.map((product) => {
+                                const cartItem = dataCart.find((item) => item.product.id === product.id);
+
+                                return (
+                                    <ProductCard
+                                        key={product.id}
+                                        product={product}
+                                        onClickProduct={handleProductClick}
+                                        cartItem={cartItem}
+                                    />
+                                );
+                            })
                         )}
                     </div>
                 </InfiniteScroll>

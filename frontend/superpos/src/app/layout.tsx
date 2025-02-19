@@ -4,7 +4,7 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import StoreProvider from "./StoreProvider";
 
-const manrope = Manrope({ weight: ["200", "300", "400", "500", "600", "700", "800"] });
+const manrope = Manrope({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800"] });
 
 export const metadata: Metadata = {
     title: "SuperPOS",

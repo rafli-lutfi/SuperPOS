@@ -99,8 +99,9 @@ export default function Cart() {
                                         </button>
                                         <p className="w-8 bg-white text-center text-sm shadow">{item.quantity}</p>
                                         <button
-                                            className="rounded-r-2xl border bg-white px-2 py-1 shadow"
+                                            className="rounded-r-2xl border bg-white px-2 py-1 shadow disabled:bg-slate-200"
                                             onClick={() => handleCartAction("increase", item.product)}
+                                            disabled={item.quantity >= item.product.stock}
                                         >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +113,7 @@ export default function Cart() {
                                             </svg>
                                         </button>
                                     </div>
-                                    <button className="" onClick={() => handleCartAction("delete", item.product)}>
+                                    <button onClick={() => handleCartAction("delete", item.product)}>
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 -960 960 960"

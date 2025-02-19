@@ -8,7 +8,7 @@ import { Transaction } from "@/types/Transaction";
 import { formatDate, toIDRCurrency } from "@/utils/formatter";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -17,11 +17,13 @@ export default function HistoryTransactionPage() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    const queryParams = new URLSearchParams(searchParams.toString());
+    const queryParams = useMemo(() => new URLSearchParams(searchParams.toString()), [searchParams]);
 
+    // State management
     const [sortColumn, setSortColumn] = useState<string | null>(queryParams.get("sort"));
     const [sortOrder, setSortOrder] = useState<string>(queryParams.get("order") || "desc");
 
+    // Fetch transaction with pagination
     const {
         data: transactionResponse,
         isLoading: isTransactionLoading,
@@ -31,6 +33,7 @@ export default function HistoryTransactionPage() {
         size,
     } = usePagination<Transaction, "transactions">(`${API_URL}/transactions`, queryParams.toString());
 
+    // Reset sort column and order if no query params
     useEffect(() => {
         if (searchParams.size === 0) {
             setSortColumn("createdAt");
@@ -38,6 +41,7 @@ export default function HistoryTransactionPage() {
         }
     }, [searchParams]);
 
+    // Handler for sorting
     const handleSortButton = (column: string) => {
         const order = sortOrder === "desc" ? "asc" : "desc";
 
@@ -47,11 +51,11 @@ export default function HistoryTransactionPage() {
         router.push(`/history?sort=${column}&order=${order}`);
     };
 
-    return isTransactionLoading ? (
-        <Loading />
-    ) : transactionError ? (
-        <Error error={transactionError} />
-    ) : (
+    // Render loading or error states
+    if (isTransactionLoading) return <Loading />;
+    if (transactionError) return <Error error={transactionError} />;
+
+    return (
         <div className="mx-6 flex h-full w-full flex-col">
             <h1 className="my-4 text-2xl font-bold">Transaction History</h1>
             <div className="h-full overflow-auto rounded-lg shadow-lg" id="table-container">
@@ -72,75 +76,31 @@ export default function HistoryTransactionPage() {
                                         <p>ID</p>
                                     </div>
                                 </th>
-                                <th className="border-b border-gray-300 px-4 py-2 text-center">
-                                    <div className="flex items-center justify-center gap-2">
-                                        <p>Transaction Date</p>
-                                        <button onClick={() => handleSortButton("createdAt")}>
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 -960 960 960"
-                                                fill="currentColor"
-                                                className={`w-5 ${
-                                                    sortColumn === "createdAt"
-                                                        ? "border border-black text-black"
-                                                        : "text-gray-500"
-                                                }`}
-                                            >
-                                                {sortColumn == "createdAt" && sortOrder == "desc" ? (
-                                                    <path d="M480-360 280-560h400L480-360Z" /> // desc
-                                                ) : (
-                                                    <path d="m280-400 200-200 200 200H280Z" /> // asc
-                                                )}
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </th>
-                                <th className="border-b border-gray-300 px-4 py-2 text-right">
-                                    <div className="flex items-center justify-end gap-2">
-                                        <p>Total Price</p>
-                                        <button onClick={() => handleSortButton("totalAmount")}>
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 -960 960 960"
-                                                fill="currentColor"
-                                                className={`w-5 ${
-                                                    sortColumn === "totalAmount"
-                                                        ? "border border-black text-black"
-                                                        : "text-gray-500"
-                                                }`}
-                                            >
-                                                {sortColumn == "totalAmount" && sortOrder == "desc" ? (
-                                                    <path d="M480-360 280-560h400L480-360Z" /> // desc
-                                                ) : (
-                                                    <path d="m280-400 200-200 200 200H280Z" /> // asc
-                                                )}
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </th>
-                                <th className="border-b border-gray-300 px-4 py-2 text-right">
-                                    <div className="flex items-center justify-end gap-2">
-                                        <p>Total Paid</p>
-                                        <button onClick={() => handleSortButton("totalPay")}>
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 -960 960 960"
-                                                fill="currentColor"
-                                                className={`w-5 ${
-                                                    sortColumn === "totalPay"
-                                                        ? "border border-black text-black"
-                                                        : "text-gray-500"
-                                                }`}
-                                            >
-                                                {sortColumn == "totalPay" && sortOrder == "desc" ? (
-                                                    <path d="M480-360 280-560h400L480-360Z" /> // desc
-                                                ) : (
-                                                    <path d="m280-400 200-200 200 200H280Z" /> // asc
-                                                )}
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </th>
+
+                                <SortableHeader
+                                    label="Transaction Date"
+                                    column="createdAt"
+                                    sortColumn={sortColumn}
+                                    sortOrder={sortOrder}
+                                    onClick={handleSortButton}
+                                    align="center"
+                                />
+                                <SortableHeader
+                                    label="Total Price"
+                                    column="totalAmount"
+                                    sortColumn={sortColumn}
+                                    sortOrder={sortOrder}
+                                    onClick={handleSortButton}
+                                    align="end"
+                                />
+                                <SortableHeader
+                                    label="Total Paid"
+                                    column="totalPay"
+                                    sortColumn={sortColumn}
+                                    sortOrder={sortOrder}
+                                    onClick={handleSortButton}
+                                    align="end"
+                                />
                                 <th className="border-b border-gray-300 px-4 py-2 text-center">Actions</th>
                             </tr>
                         </thead>
@@ -170,14 +130,7 @@ export default function HistoryTransactionPage() {
                                         <td className="border-gray-300 px-4 py-2 text-center">
                                             <button className="rounded bg-blue-500 px-2 py-1 text-white hover:brightness-90">
                                                 <Link href={`/history/detail/${transaction.id}`}>
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 -960 960 960"
-                                                        fill="currentColor"
-                                                        className="w-4"
-                                                    >
-                                                        <path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z" />
-                                                    </svg>
+                                                    <ViewIcon />
                                                 </Link>
                                             </button>
                                         </td>
@@ -191,3 +144,58 @@ export default function HistoryTransactionPage() {
         </div>
     );
 }
+
+type SortableHeaderProps = {
+    label: string;
+    column: string;
+    sortColumn: string | null;
+    sortOrder: string;
+    onClick: (column: string) => void;
+    align?: "start" | "center" | "end";
+};
+
+const SortableHeader = ({ label, column, sortColumn, sortOrder, onClick, align = "start" }: SortableHeaderProps) => {
+    const isActive = sortColumn === column;
+    console.log(column, sortColumn, isActive);
+    const icon =
+        isActive && sortOrder === "desc" ? <SortDescIcon isActive={isActive} /> : <SortAscIcon isActive={isActive} />;
+
+    return (
+        <th className={"border-b border-gray-300 px-4 py-2"}>
+            <div className={`flex items-center justify-${align} gap-2`}>
+                <p>{label}</p>
+                <button onClick={() => onClick(column)} className={`${isActive ? "border border-black" : ""}`}>
+                    {icon}
+                </button>
+            </div>
+        </th>
+    );
+};
+
+const SortAscIcon = (isActive: { isActive: boolean }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 -960 960 960"
+        fill="currentColor"
+        className={`w-5 ${isActive ? "text-black" : "text-gray-500"}`}
+    >
+        <path d="m280-400 200-200 200 200H280Z" />
+    </svg>
+);
+
+const SortDescIcon = (isActive: { isActive: boolean }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 -960 960 960"
+        fill="currentColor"
+        className={`w-5 ${isActive ? "text-black" : "text-gray-500"}`}
+    >
+        <path d="M480-360 280-560h400L480-360Z" />
+    </svg>
+);
+
+const ViewIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor" className="w-4">
+        <path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z" />
+    </svg>
+);
