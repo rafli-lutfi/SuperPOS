@@ -1,14 +1,17 @@
 "use client";
 
-import { poster, updater } from "@/libs/fetcher";
+import { fetcher, poster, updater } from "@/libs/fetcher";
 import { Category } from "@/types/Category";
 import { Response } from "@/types/Response";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { mutate } from "swr";
-import Swal from "sweetalert2";
+import useSWR from "swr";
 import * as yup from "yup";
+import { useEffect } from "react";
+import Loading from "@/components/Loading";
+import Error from "@/components/Error";
+import { notify } from "@/utils/notification";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,8 +22,8 @@ const CATEGORY_SCHEMA: yup.ObjectSchema<FormValues> = yup.object({
 });
 
 type CategoryFormProps = {
-    category?: Category;
     type: "new" | "edit";
+    categoryId?: number;
 };
 
 type FormValues = {
@@ -29,49 +32,60 @@ type FormValues = {
     description?: string | null;
 };
 
-export default function CategoryForm({ category, type }: CategoryFormProps) {
+export default function CategoryForm({ type, categoryId }: CategoryFormProps) {
     const router = useRouter();
+
+    const {
+        data: categoryResponse,
+        isLoading: isCategoryLoading,
+        error: categoryError,
+        mutate,
+    } = useSWR<Response<Category>>(
+        type === "edit" && categoryId ? `${API_URL}/categories/${categoryId}` : null,
+        fetcher
+    );
 
     const {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm({
-        defaultValues: {
-            id: category?.id || 0,
-            name: category?.name,
-            description: category?.description,
-        },
         resolver: yupResolver(CATEGORY_SCHEMA),
     });
+
+    useEffect(() => {
+        if (type === "edit" && categoryResponse?.data) {
+            reset({
+                id: categoryResponse.data.id,
+                name: categoryResponse.data.name,
+                description: categoryResponse.data.description,
+            });
+        }
+    }, [categoryResponse, type, reset]);
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         try {
             if (type === "edit") {
-                await updater(`${API_URL}/categories/${category?.id}`, data);
-                await mutate(`${API_URL}/categories/${category?.id}`);
+                await updater(`${API_URL}/categories/${categoryId}`, data);
+                mutate();
             } else {
                 await poster(`${API_URL}/categories`, data);
             }
 
-            Swal.fire({
-                title: "Success!",
-                text: `Category has been ${type === "new" ? "created" : "updated"}`,
-                icon: "success",
-            });
+            notify.success(undefined, `Category has been ${type === "new" ? "created" : "updated"}`);
 
             router.push("/category");
         } catch (error) {
             const errorResponse = error as Response<null>;
             const errorMessage = errorResponse?.message || "An unknown error occurred.";
 
-            Swal.fire({
-                title: "Error",
-                text: errorMessage,
-                icon: "error",
-            });
+            notify.error(undefined, errorMessage);
         }
     };
+
+    if (isCategoryLoading) return <Loading />;
+    if (categoryError) return <Error error={categoryError} />;
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-6 p-4">
@@ -124,7 +138,7 @@ export default function CategoryForm({ category, type }: CategoryFormProps) {
                 type="submit"
                 className="mt-6 rounded-md bg-blue-600 px-4 py-2 text-white transition-all hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-                {category ? "Update Category" : "Save Category"}
+                {type === "edit" ? "Update Category" : "Save Category"}
             </button>
         </form>
     );

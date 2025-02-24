@@ -20,9 +20,9 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const PRODUCT_SCHEMA: yup.ObjectSchema<FormValues> = yup.object({
     id: yup.number(),
     name: yup.string().required(),
-    category_id: yup.number().required(),
-    price: yup.number().required(),
-    stock: yup.number().required(),
+    category_id: yup.number().typeError("category ID must be a number").positive().integer().required(),
+    price: yup.number().typeError("price must be a number").positive("Price must be a positive number").required(),
+    stock: yup.number().typeError("Stock must be a number").positive().integer().required(),
     description: yup.string().nullable(),
     image_url: yup.string().url("Must be a valid URL").nullable(),
 });
@@ -100,11 +100,10 @@ export default function ProductForm({ product, type }: ProductFormProps) {
         }
     };
 
-    return isCategoriesLoading ? (
-        <Loading />
-    ) : categoriesError ? (
-        <Error error={categoriesError} />
-    ) : (
+    if (isCategoriesLoading) return <Loading />;
+    if (categoriesError) return <Error error={categoriesError} />;
+
+    return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-6 p-4">
             {/* ID Field */}
             <div className="flex flex-col gap-1">
@@ -146,6 +145,9 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                     {...register("category_id")}
                     value={selectedCategory}
                 >
+                    <option value="" disabled>
+                        Select Category
+                    </option>
                     {categoriesResponse?.data.map((category) => (
                         <option key={category.id} value={category.id}>
                             {capitalizeEachWord(category.name)}
@@ -180,6 +182,7 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                         id="price"
                         className="rounded-md border border-gray-300 p-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter price (cth. Rp 20.000)"
+                        min={0}
                         {...register("price")}
                     />
                     {errors.price && <p className="text-sm italic text-red-500">⚠️ {errors.price.message}</p>}
@@ -193,6 +196,7 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                         id="stock"
                         className="rounded-md border border-gray-300 p-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter stock quantity"
+                        min={0}
                         {...register("stock")}
                     />
                     {errors.stock && <p className="text-sm italic text-red-500">⚠️ {errors.stock.message}</p>}
@@ -223,7 +227,7 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                         alt="Product Preview"
                         width={160}
                         height={160}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover p-2"
                     />
                 </div>
             </div>
