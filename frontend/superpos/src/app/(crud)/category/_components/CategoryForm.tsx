@@ -1,29 +1,27 @@
 "use client";
 
-import { fetcher, poster, updater } from "@/libs/fetcher";
-import { Category } from "@/types/Category";
+import { poster, updater } from "@/libs/fetcher";
 import { Response } from "@/types/Response";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import useSWR from "swr";
 import * as yup from "yup";
 import { useEffect } from "react";
-import Loading from "@/components/Loading";
-import Error from "@/components/Error";
 import { notify } from "@/utils/notification";
+import { Category } from "@/types/Category";
+import { mutate } from "swr";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const CATEGORY_SCHEMA: yup.ObjectSchema<FormValues> = yup.object({
-    id: yup.number(),
+    id: yup.number().optional(),
     name: yup.string().required(),
     description: yup.string().nullable(),
 });
 
 type CategoryFormProps = {
     type: "new" | "edit";
-    categoryId?: number;
+    category?: Category;
 };
 
 type FormValues = {
@@ -32,18 +30,8 @@ type FormValues = {
     description?: string | null;
 };
 
-export default function CategoryForm({ type, categoryId }: CategoryFormProps) {
+export default function CategoryForm({ type, category }: CategoryFormProps) {
     const router = useRouter();
-
-    const {
-        data: categoryResponse,
-        isLoading: isCategoryLoading,
-        error: categoryError,
-        mutate,
-    } = useSWR<Response<Category>>(
-        type === "edit" && categoryId ? `${API_URL}/categories/${categoryId}` : null,
-        fetcher
-    );
 
     const {
         register,
@@ -55,20 +43,20 @@ export default function CategoryForm({ type, categoryId }: CategoryFormProps) {
     });
 
     useEffect(() => {
-        if (type === "edit" && categoryResponse?.data) {
+        if (type === "edit" && category) {
             reset({
-                id: categoryResponse.data.id,
-                name: categoryResponse.data.name,
-                description: categoryResponse.data.description,
+                id: category.id,
+                name: category.name,
+                description: category.description,
             });
         }
-    }, [categoryResponse, type, reset]);
+    }, [category, type, reset]);
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         try {
             if (type === "edit") {
-                await updater(`${API_URL}/categories/${categoryId}`, data);
-                mutate();
+                await updater(`${API_URL}/categories/${category?.id}`, data);
+                mutate(`${API_URL}/categories/${category?.id}`);
             } else {
                 await poster(`${API_URL}/categories`, data);
             }
@@ -83,9 +71,6 @@ export default function CategoryForm({ type, categoryId }: CategoryFormProps) {
             notify.error(undefined, errorMessage);
         }
     };
-
-    if (isCategoryLoading) return <Loading />;
-    if (categoryError) return <Error error={categoryError} />;
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-6 p-4">
