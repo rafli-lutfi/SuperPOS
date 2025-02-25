@@ -10,7 +10,7 @@ import Error from "@/components/Error";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 type EditCateogryPageProps = {
-    params: { id?: string };
+    params: Promise<{ id?: string }>;
 };
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default async function EditCateogryPage({ params }: EditCateogryPageProps) {
     try {
-        const categoryId = params.id ? Number(params.id) : NaN;
+        const categoryId = Number((await params).id);
 
         if (Number.isNaN(Number(categoryId))) {
             redirect("/category");

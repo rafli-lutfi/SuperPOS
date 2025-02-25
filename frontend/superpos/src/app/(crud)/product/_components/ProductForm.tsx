@@ -1,8 +1,6 @@
 "use client";
 
-import Error from "@/components/Error";
-import Loading from "@/components/Loading";
-import { fetcher, poster, updater } from "@/libs/fetcher";
+import { poster, updater } from "@/libs/fetcher";
 import { Category } from "@/types/Category";
 import { Product } from "@/types/Product";
 import { Response } from "@/types/Response";
@@ -10,9 +8,10 @@ import { capitalizeEachWord, isValidUrl } from "@/utils/formatter";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
-import useSWR, { mutate } from "swr";
+import { mutate } from "swr";
 import * as yup from "yup";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -20,7 +19,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const PRODUCT_SCHEMA: yup.ObjectSchema<FormValues> = yup.object({
     id: yup.number(),
     name: yup.string().required(),
-    category_id: yup.number().typeError("category ID must be a number").positive().integer().required(),
+    category_id: yup.number().positive("please select category").integer().required(),
     price: yup.number().typeError("price must be a number").positive("Price must be a positive number").required(),
     stock: yup.number().typeError("Stock must be a number").positive().integer().required(),
     description: yup.string().nullable(),
@@ -28,6 +27,7 @@ const PRODUCT_SCHEMA: yup.ObjectSchema<FormValues> = yup.object({
 });
 
 type ProductFormProps = {
+    categories: Category[];
     product?: Product;
     type: "new" | "edit";
 };
@@ -42,32 +42,35 @@ type FormValues = {
     image_url?: string | null;
 };
 
-export default function ProductForm({ product, type }: ProductFormProps) {
+export default function ProductForm({ product, categories, type }: ProductFormProps) {
     const router = useRouter();
-
-    const {
-        data: categoriesResponse,
-        isLoading: isCategoriesLoading,
-        error: categoriesError,
-    } = useSWR<Response<Category[]>>(`${API_URL}/categories`, fetcher);
 
     const {
         register,
         handleSubmit,
         watch,
         formState: { errors },
+        reset,
     } = useForm({
         defaultValues: {
-            id: product?.id || 0,
-            category_id: product?.category.id,
-            name: product?.name,
-            stock: product?.stock,
-            price: product?.price,
-            description: product?.description,
-            image_url: product?.image_url,
+            category_id: 0,
         },
         resolver: yupResolver(PRODUCT_SCHEMA),
     });
+
+    useEffect(() => {
+        if (type === "edit" && product && categories) {
+            reset({
+                id: product.id,
+                name: product.name,
+                category_id: product.category.id,
+                price: product.price,
+                stock: product.stock,
+                description: product.description,
+                image_url: product.image_url,
+            });
+        }
+    }, [categories, product, reset, type]);
 
     const selectedCategory = watch("category");
     const imageUrl = isValidUrl(watch("image_url")) ? watch("image_url") : null;
@@ -99,9 +102,6 @@ export default function ProductForm({ product, type }: ProductFormProps) {
             });
         }
     };
-
-    if (isCategoriesLoading) return <Loading />;
-    if (categoriesError) return <Error error={categoriesError} />;
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-6 p-4">
@@ -145,10 +145,10 @@ export default function ProductForm({ product, type }: ProductFormProps) {
                     {...register("category_id")}
                     value={selectedCategory}
                 >
-                    <option value="" disabled>
+                    <option value={0} disabled>
                         Select Category
                     </option>
-                    {categoriesResponse?.data.map((category) => (
+                    {categories.map((category) => (
                         <option key={category.id} value={category.id}>
                             {capitalizeEachWord(category.name)}
                         </option>

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import CategoryTable from "./_components/CategoryTable";
+import { Metadata } from "next";
 import { Suspense } from "react";
 import Loading from "@/components/Loading";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Category",

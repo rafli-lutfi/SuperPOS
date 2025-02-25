@@ -3,32 +3,29 @@ import { fetcher } from "@/libs/fetcher";
 import { Category } from "@/types/Category";
 import { Response } from "@/types/Response";
 import { capitalizeEachWord } from "@/utils/formatter";
+import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 type DetailCategoryPageProps = {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 };
 
-export function generateMetadata({ params }: DetailCategoryPageProps) {
-    const categoryId = params.id;
+export async function generateMetadata({ params }: DetailCategoryPageProps): Promise<Metadata> {
+    const categoryId = (await params).id;
 
     return {
         title: `Category ID ${categoryId}`,
-        description: "The POS that's Actually Super!",
-        icons: {
-            icon: "/favicon.png",
-        },
     };
 }
 
 export default async function DetailCategoryPage({ params }: DetailCategoryPageProps) {
     try {
-        const categoryId = params.id ? Number(params.id) : NaN;
+        const categoryId = Number((await params).id);
 
-        if (Number.isNaN(Number(categoryId))) {
+        if (Number.isNaN(categoryId)) {
             redirect("/category");
         }
 
