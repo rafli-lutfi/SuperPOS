@@ -1,3 +1,5 @@
+"use client";
+
 import { useAppDispatch, useAppSelector } from "@/libs/hooks";
 import { increaseQuantity, decreaseQuantity, deleteItem } from "@/libs/features/cart/cartSlice";
 import Image from "next/image";
