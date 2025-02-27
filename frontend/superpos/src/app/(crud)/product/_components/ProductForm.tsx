@@ -17,7 +17,10 @@ import * as yup from "yup";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const PRODUCT_SCHEMA: yup.ObjectSchema<FormValues> = yup.object({
-    id: yup.number(),
+    id: yup
+        .number()
+        .transform((value, originalValue) => (originalValue === "" ? undefined : value))
+        .optional(),
     name: yup.string().required(),
     category_id: yup.number().positive("please select category").integer().required(),
     price: yup.number().typeError("price must be a number").positive("Price must be a positive number").required(),

@@ -14,7 +14,10 @@ import { mutate } from "swr";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const CATEGORY_SCHEMA: yup.ObjectSchema<FormValues> = yup.object({
-    id: yup.number().optional(),
+    id: yup
+        .number()
+        .transform((value, originalValue) => (originalValue === "" ? undefined : value))
+        .optional(),
     name: yup.string().required(),
     description: yup.string().nullable(),
 });
@@ -25,7 +28,7 @@ type CategoryFormProps = {
 };
 
 type FormValues = {
-    id?: number;
+    id?: number | null;
     name: string;
     description?: string | null;
 };
@@ -38,6 +41,7 @@ export default function CategoryForm({ type, category }: CategoryFormProps) {
         handleSubmit,
         formState: { errors },
         reset,
+        watch,
     } = useForm({
         resolver: yupResolver(CATEGORY_SCHEMA),
     });
@@ -52,7 +56,11 @@ export default function CategoryForm({ type, category }: CategoryFormProps) {
         }
     }, [category, type, reset]);
 
+    const test = watch("id");
+    console.log(test);
+
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
+        console.log(test);
         try {
             if (type === "edit") {
                 await updater(`${API_URL}/categories/${category?.id}`, data);
@@ -87,6 +95,7 @@ export default function CategoryForm({ type, category }: CategoryFormProps) {
                     placeholder="Auto-Generated"
                     {...register("id")}
                 />
+                {errors.id && <p className="text-sm italic text-red-500">⚠️ {errors.id.message}</p>}
             </div>
 
             {/* Name Field */}
